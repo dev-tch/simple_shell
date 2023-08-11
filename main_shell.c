@@ -22,6 +22,9 @@ int main(int argc, char *argv[])
 	int read_ok = 1;
 	int i;
 
+	/*fix to suppress the warning about unused attributes*/
+	(void)argc;
+	(void)argv;
 	while (loop)
 	{
 		display_prompt("($)", 4);
