@@ -30,14 +30,19 @@ int main(int argc, char *argv[])
 		{
 			continue;
 		}
-		head = NULL;
+
 		i = add_args_cmd_to_list(user_input, &head);
-		if (i > 0)
+		if (i > 0 && head != NULL)
 			handle_errors(head->arg);
 		if (head != NULL)
 		{
 			free_list(head);
 			head = NULL;
+		}
+		if (user_input != NULL)
+		{
+			free(user_input);
+			user_input = NULL;
 		}
 	}
 	return (0);
@@ -85,11 +90,13 @@ char *delimiters = " \n\r\t";
 char *token;
 
 token = strtok(user_input, delimiters);
-i++;
 while (token != NULL)
 {
-	add_node_end(head, token);
-	i++;
+	if (!is_empty(token))
+	{
+		add_node_end(head, token);
+		i++;
+	}
 	token = strtok(NULL, delimiters);
 }
 return (i);
