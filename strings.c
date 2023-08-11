@@ -108,7 +108,7 @@ char *_strdup(char *str)
 	{
 		len++;
 		str++;
-		}
+	}
 	/* memory allocation*/
 	cpy = (char *) malloc((len + 1) * sizeof(char));
 	if (cpy == NULL)
@@ -117,6 +117,8 @@ char *_strdup(char *str)
 	{
 		cpy[i] = bkp[i];
 	}
+	/*add character terminating to string*/
+	cpy[i] = '\0';
 	return (cpy);
 }
 
