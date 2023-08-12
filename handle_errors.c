@@ -11,7 +11,7 @@
 char *get_error_value(unsigned int  code)
 {
 unsigned int i = 0;
-static char *err[14];
+static char *err[17];
 /*define errors*/
 err[0]  = ": SUCCESS";
 err[1]  = ": Operation not permitted";
