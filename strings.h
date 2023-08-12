@@ -7,4 +7,5 @@ int _strcmp(char *s1, char *s2);
 char *_strcpy(char *dest, char *src);
 int is_space(char c);
 int is_empty(char  *str);
+char *split(char *str, char separator);
 #endif

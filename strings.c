@@ -1,10 +1,12 @@
 #include <stddef.h>
 #include <stdlib.h>
+
 /* new module for string functions*/
 
 /**
 * _strlen -length of string
 * @str: string
+*
 * Return:length of string
 */
 int _strlen(char *str)
@@ -24,54 +26,31 @@ int _strlen(char *str)
  */
 char *_strcat(char *dest, char *src)
 {
-	int i;
-	int j;
+	int x;
+	int y;
 
-	i = 0;
-	while (dest[i] != '\0')
+	x = 0;
+	while (dest[x] != '\0')
 	{
-		i++;
+		x++;
 	}
-	j = 0;
-	while (src[j] != '\0')
+	y = 0;
+	while (src[y] != '\0')
 	{
-		dest[i] = src[j];
-		i++;
-		j++;
+		dest[x] = src[y];
+		x++;
+		y++;
 	}
 
-	dest[i] = '\0';
+	dest[x] = '\0';
 	return (dest);
 }
 
 /**
- * _strcmp - compare string values
- * @s1: input value
- * @s2: input value
- *
- * Return: s1[i] - s2[i]
- */
-int _strcmp(char *s1, char *s2)
-{
-	int i;
-
-	i = 0;
-	while (s1[i] != '\0' && s2[i] != '\0')
-	{
-		if (s1[i] != s2[i])
-		{
-			return (s1[i] - s2[i]);
-		}
-		i++;
-	}
-	return (0);
-}
-
-/**
- * char *_strcpy - a function that copies the string pointed to by src
+ * _strcpy - a function that copies the string pointed to by src
  * @dest: copy to
  * @src: copy from
- * Return: string
+ * Return: the copied string
  */
 char *_strcpy(char *dest, char *src)
 {
@@ -121,4 +100,3 @@ char *_strdup(char *str)
 	cpy[i] = '\0';
 	return (cpy);
 }
-

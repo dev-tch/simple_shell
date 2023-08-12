@@ -29,3 +29,39 @@ int is_empty(char  *str)
 
 	return (1);
 }
+
+/**
+ * split - split a string based on a separator
+ * @str: input string
+ * @separator: separator character
+ *
+ * Return: pointer to the first token, NULL if no more tokens found
+ */
+char *split(char *str, char separator)
+{
+	static char *token;
+	char *result;
+
+	if (str != NULL)
+	{
+	token = str;
+	}
+	if (token == NULL || *token == '\0')
+	{
+	return (NULL);
+	}
+
+	result = token;
+	while (*token != '\0')
+	{
+		if (*token == separator)
+		{
+			*token = '\0';
+			token++;
+			return (result);
+		}
+		token++;
+	}
+
+	return (result);
+}
