@@ -2,10 +2,11 @@
 #include <stdio.h>
 #include "strings.h"
 #include "list.h"
+#include "errors.h"
 
-int read_command(char **user_input);
-int add_args_cmd_to_list(char *user_input, info_cmd **head);
-void handle_errors(char *command);
+int read_command(char *program, char **user_input);
+int add_args_cmd_to_list(char *program, char *user_input, info_cmd **head);
+void handle_errors(char *program, char *command);
 
 /**
  * main - entry point
@@ -18,25 +19,28 @@ int main(int argc, char *argv[])
 	/*local variables */
 	int loop = 1;
 	info_cmd *head = NULL;
-	char *user_input;
+	char *user_input, *program;
 	int read_ok = 1;
 	int i;
 
-	/*fix to suppress the warning about unused attributes*/
-	(void)argc;
-	(void)argv;
+	if (argc >= 0)
+	{
+		program = argv[0];
+	}
 	while (loop)
 	{
 		display_prompt("($)", 4);
-		read_ok = read_command(&user_input);
+		read_ok = read_command(program, &user_input);
 		if (!read_ok)
 		{
 			continue;
 		}
 
-		i = add_args_cmd_to_list(user_input, &head);
+		i = add_args_cmd_to_list(program, user_input, &head);
 		if (i > 0 && head != NULL)
-			handle_errors(head->arg);
+		{
+			handle_errors(program, head->arg);
+		}
 		if (head != NULL)
 		{
 			free_list(head);
@@ -53,10 +57,11 @@ int main(int argc, char *argv[])
 
 /**
 * read_command - read input from stdin
+* @program: name of shell program
 * @user_input: pointer to pointer char
 * Return: (0==> read is ko) (1 ==> read is ok)
 */
-int  read_command(char **user_input)
+int  read_command(char *program, char **user_input)
 {
 	size_t n = 0;
 	ssize_t nb_bytes = 0;
@@ -64,7 +69,7 @@ int  read_command(char **user_input)
 	nb_bytes = getline(user_input, &n, stdin);
 
 	if (nb_bytes == -1)
-	{
+	{       print_error(program, GETLINE_ERROR, NEW_ERROR);
 		return (0);
 	}
 	if (nb_bytes  <= 1)
@@ -82,22 +87,29 @@ int  read_command(char **user_input)
 }
 /**
 * add_args_cmd_to_list - save name commmant and its arguments in list
+* @program: name of shell program
 * @user_input: pointer to input entered by user
 * @head: pointer to pointer to the head node of list
 * Return: number of nodes added to list
 */
-int add_args_cmd_to_list(char *user_input, info_cmd **head)
+int add_args_cmd_to_list(char *program, char *user_input, info_cmd **head)
 {
 int i = 0;
 char *delimiters = " \n\r\t";
 char *token;
+info_cmd *inserted_node = NULL;
 
 token = strtok(user_input, delimiters);
 while (token != NULL)
 {
 	if (!is_empty(token))
 	{
-		add_node_end(head, token);
+		inserted_node = add_node_end(head, token);
+		if (inserted_node == NULL)
+		{
+			print_error(program, MALLOC_ERROR, NEW_ERROR);
+			break;
+		}
 		i++;
 	}
 	token = strtok(NULL, delimiters);
@@ -106,17 +118,26 @@ return (i);
 }
 /**
 * handle_errors - check if command is valid
+* @program: name of shell program
 *@command: name of command
 *Return: void
 */
-void handle_errors(char *command)
-{       /* test there is \n in command that's why our file not exist */
+void handle_errors(char *program, char *command)
+{
 	struct stat st;
-	int err;
+	int err = 0;
 
+	/*check if  file exist*/
 	err = stat(command, &st);
 	if (err == -1)
+	{       print_error(program, errno, STD_ERROR);
+		return;
+	}
+
+	/*check If file is excutable */
+	err = access(command, X_OK);
+	if (err == -1)
 	{
-		printf("./shell: No such file or directory");
+		print_error(program, errno, STD_ERROR);
 	}
 }

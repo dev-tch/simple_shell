@@ -1,4 +1,8 @@
 README.md : added by imane
 TC:  list.h , list_functions.c , main_shell.h , main_shell.c , new_types.h
 TC: list_functions.c main_shell.c strings.h strings2.c
- 
+== TC ==  
+-  new file:   errors.h
+-  new file:   handle_errors.c
+-  modified:   main_shell.c 
+== TC ==
