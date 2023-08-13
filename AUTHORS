@@ -6,3 +6,11 @@ TC: list_functions.c main_shell.c strings.h strings2.c
 -  new file:   handle_errors.c
 -  modified:   main_shell.c 
 == TC ==
+-  modified: errors.
+- modified: list.h
+- modified: list_functions.c
+- modified: main_shell.c
+- modified: main_shell.h
+- new     : proc_exec__command.c
+== TC ==
+

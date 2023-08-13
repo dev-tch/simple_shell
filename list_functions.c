@@ -107,4 +107,57 @@ head = &new_node;
 return (new_node);
 }
 
+/**
+* list_len - calculates the number of elemnts in linked list
+* @h: pointer to head  of list
+* Return: size of list
+*/
+int list_len(const info_cmd *h)
+{
+int nb = 0;
+while (h != NULL)
+{
+	nb++;
+	h = h->next;
+}
+return (nb);
+}
 
+/**
+* list_to_array - convert list to array
+* @h: head of list
+* Return: array of constant pointers
+*/
+char **list_to_array(info_cmd *h)
+{
+	int nb_nodes = 0, index = 0, i = 0;
+	char **cmd_args;
+
+	/*get lenght of list*/
+	nb_nodes = list_len(h);
+	if (nb_nodes == 0)
+		return (NULL);
+	/*allocate the memory for array*/
+	cmd_args  = (char **)malloc((nb_nodes + 1) * sizeof(char *));
+	if (cmd_args == NULL)
+		return (NULL);
+	/* copy nodes from list to new created array*/
+	while (h != NULL)
+	{
+		cmd_args[index] = (char *)malloc(h->len + 1);
+		if (cmd_args[index] == NULL)
+		{
+			for (i = 0; i < index; i++)
+			{
+				free(cmd_args[i]);
+			}
+			free(cmd_args);
+			return (NULL);
+		}
+		_strcpy(cmd_args[index], h->arg);
+		h = h->next;
+		index++;
+	}
+	cmd_args[index] = NULL;
+	return (cmd_args);
+}

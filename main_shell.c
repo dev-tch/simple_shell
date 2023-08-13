@@ -6,15 +6,16 @@
 
 int read_command(char *program, char **user_input);
 int add_args_cmd_to_list(char *program, char *user_input, info_cmd **head);
-void handle_errors(char *program, char *command);
+int handle_errors(char *program, char *command);
 
 /**
  * main - entry point
  * @argc: number of arguments
  * @argv: list of arguments
+ * @env: environnment variables
  * Return: (0==> ok ) (1 ==> ko)
  */
-int main(int argc, char *argv[])
+int main(int argc, char *argv[], char **env)
 {
 	/*local variables */
 	int loop = 1;
@@ -39,7 +40,11 @@ int main(int argc, char *argv[])
 		i = add_args_cmd_to_list(program, user_input, &head);
 		if (i > 0 && head != NULL)
 		{
-			handle_errors(program, head->arg);
+			if (handle_errors(program, head->arg) == 1)
+			{
+				/*lunch the excution of command with process child*/
+				loop = lunch_shell_execution(program, head, env);
+			}
 		}
 		if (head != NULL)
 		{
@@ -54,7 +59,6 @@ int main(int argc, char *argv[])
 	}
 	return (0);
 }
-
 /**
 * read_command - read input from stdin
 * @program: name of shell program
@@ -122,7 +126,7 @@ return (i);
 *@command: name of command
 *Return: void
 */
-void handle_errors(char *program, char *command)
+int handle_errors(char *program, char *command)
 {
 	struct stat st;
 	int err = 0;
@@ -131,7 +135,7 @@ void handle_errors(char *program, char *command)
 	err = stat(command, &st);
 	if (err == -1)
 	{       print_error(program, errno, STD_ERROR);
-		return;
+		return (0);
 	}
 
 	/*check If file is excutable */
@@ -139,5 +143,7 @@ void handle_errors(char *program, char *command)
 	if (err == -1)
 	{
 		print_error(program, errno, STD_ERROR);
+		return (0);
 	}
+	return (1);
 }
