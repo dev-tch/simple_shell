@@ -77,7 +77,7 @@ char *split(char *str, char *separators)
 	result = token;
 	while (*token != '\0')
 	{
-		if (strchr(separators, *token) != NULL)
+		if (_strchr(separators, *token) != NULL)
 		{
 			*token = '\0';
 			token++;
