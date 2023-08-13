@@ -103,7 +103,7 @@ char *delimiters = " \n\r\t";
 char *token;
 info_cmd *inserted_node = NULL;
 
-token = strtok(user_input, delimiters);
+token = split(user_input, delimiters);
 while (token != NULL)
 {
 	if (!is_empty(token))
@@ -116,7 +116,7 @@ while (token != NULL)
 		}
 		i++;
 	}
-	token = strtok(NULL, delimiters);
+	token = split(NULL, delimiters);
 }
 return (i);
 }
