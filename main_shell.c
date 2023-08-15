@@ -4,7 +4,7 @@
 #include "list.h"
 #include "errors.h"
 
-int read_command(char *program, char **user_input);
+int read_command(char *program, char **user_input, size_t *n);
 int add_args_cmd_to_list(char *program, char *user_input, info_cmd **head);
 int handle_errors(char *program, char *command);
 
@@ -23,6 +23,7 @@ int main(int argc, char *argv[], char **env)
 	char *user_input, *program;
 	int read_ok = 1;
 	int i;
+	size_t n;
 
 	if (argc >= 0)
 	{
@@ -31,7 +32,12 @@ int main(int argc, char *argv[], char **env)
 	while (loop)
 	{
 		display_prompt("($)", 4);
-		read_ok = read_command(program, &user_input);
+		read_ok = read_command(program, &user_input, &n);
+		if (read_ok == -1)
+		{
+			display_prompt("\n", 1);
+			break;
+		}
 		if (!read_ok)
 		{
 			continue;
@@ -63,18 +69,25 @@ int main(int argc, char *argv[], char **env)
 * read_command - read input from stdin
 * @program: name of shell program
 * @user_input: pointer to pointer char
-* Return: (0==> read is ko) (1 ==> read is ok)
+* @n: address of variable that holds the size of input buffer
+* Return: (0: next loop iteration) (-1: break loop )(1: continue task)
 */
-int  read_command(char *program, char **user_input)
+int  read_command(char *program, char **user_input, size_t *n)
 {
-	size_t n = 0;
-	ssize_t nb_bytes = 0;
 	/** local variables declaration  */
-	nb_bytes = getline(user_input, &n, stdin);
+	ssize_t nb_bytes = 0;
+	int ret;
 
+	nb_bytes = getline(user_input, n, stdin);
+	ret = handle_CTRD(n, user_input);
+	if (ret != 2)
+	{
+		return (ret);
+	}
 	if (nb_bytes == -1)
 	{       print_error(program, GETLINE_ERROR, NEW_ERROR);
-		return (0);
+		exit(EXIT_FAIL);
+		/*return (0);*/
 	}
 	if (nb_bytes  <= 1)
 	{

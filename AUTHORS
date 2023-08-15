@@ -13,4 +13,9 @@ TC: list_functions.c main_shell.c strings.h strings2.c
 - modified: main_shell.h
 - new     : proc_exec__command.c
 == TC ==
+- new file:   handle_ctr_d.c
+- modified:   main_shell.c
+- modified:   main_shell.h
+- modified:   strings2.c
+
 

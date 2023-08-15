@@ -55,7 +55,7 @@ char *_strchr(char *s, char c)
 /**
  * split - split a string based on a separator
  * @str: input string
- * @separator: separator character
+ * @separators: separator character
  *
  * Return: pointer to the first token, NULL if no more tokens found
  */
