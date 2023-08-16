@@ -26,23 +26,22 @@ int _strlen(char *str)
  */
 char *_strcat(char *dest, char *src)
 {
-	int x;
-	int y;
+	int x = 0;
+	int y = 0;
 
-	x = 0;
 	while (dest[x] != '\0')
 	{
 		x++;
 	}
-	y = 0;
+
 	while (src[y] != '\0')
 	{
-		dest[x] = src[y];
-		x++;
+		dest[x + y] = src[y];
 		y++;
 	}
 
-	dest[x] = '\0';
+	dest[x + y] = '\0';
+
 	return (dest);
 }
 
@@ -100,3 +99,23 @@ char *_strdup(char *str)
 	cpy[i] = '\0';
 	return (cpy);
 }
+
+/**
+ * _strcmp - compare two strings
+ *@s1: first string
+ *@s2: second string
+ * Return: int
+ */
+int _strcmp(char *s1, char *s2)
+{
+int i = 0;
+/*Main */
+while (s1[i] != '\0' || s2[i] != '\0')
+{
+if (s1[i] != s2[i])
+return (s1[i] - s2[i]);
+i++;
+}
+return (0);
+}
+

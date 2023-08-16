@@ -9,4 +9,5 @@ int is_space(char c);
 int is_empty(char  *str);
 char *_strchr(char *s, char c);
 char *split(char *str, char *separators);
+int _atoi(char *s);
 #endif

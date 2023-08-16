@@ -44,7 +44,9 @@ int handle_CTRD(size_t *n,  char **user_input)
 		}
 		else
 		{
-			free(*user_input);
+			if (*user_input != NULL)
+				free(*user_input);
+
 			*n = 0;
 			return (-1);
 		}

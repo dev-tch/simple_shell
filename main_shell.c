@@ -3,11 +3,11 @@
 #include "strings.h"
 #include "list.h"
 #include "errors.h"
+#include "cleanup.h"
 
 int read_command(char *program, char **user_input, size_t *n);
 int add_args_cmd_to_list(char *program, char *user_input, info_cmd **head);
 int handle_errors(char *program, char *command);
-
 /**
  * main - entry point
  * @argc: number of arguments
@@ -20,14 +20,21 @@ int main(int argc, char *argv[], char **env)
 	/*local variables */
 	int loop = 1;
 	info_cmd *head = NULL;
-	char *user_input, *program;
+	char *user_input = NULL;
+	char *program = NULL;
 	int read_ok = 1;
-	int i;
-	size_t n;
+	int i = 0;
+	size_t n = 0;
+	char **args = NULL;
+	int len_args = 0;
 
 	if (argc >= 0)
 	{
 		program = argv[0];
+	}
+	else
+	{
+		exit(EXIT_FAIL);
 	}
 	while (loop)
 	{
@@ -46,23 +53,28 @@ int main(int argc, char *argv[], char **env)
 		i = add_args_cmd_to_list(program, user_input, &head);
 		if (i > 0 && head != NULL)
 		{
-			if (handle_errors(program, head->arg) == 1)
+
+			args = list_to_array(head);
+			len_args = list_len(head);
+			/*test is builtin function of shell*/
+			if (_strcmp(args[0], "exit") == 0)
 			{
-				/*lunch the excution of command with process child*/
-				loop = lunch_shell_execution(program, head, env);
+				cleanup1(&user_input, &head);
+			}
+			loop = lunch_builtin(program, len_args,  args, env);
+			if (loop  == NOT_BUILT_IN)
+			{
+				if (handle_errors(program, args[0]) == 1)
+				{
+					/*lunch the excution of command with process child*/
+					loop = lunch_shell_execution(program, len_args, args, env);
+				}
 			}
 		}
-		if (head != NULL)
-		{
-			free_list(head);
-			head = NULL;
-		}
-		if (user_input != NULL)
-		{
-			free(user_input);
-			user_input = NULL;
-		}
+		/*after each process of command*/
+		cleanup(&user_input, &head, len_args, &args);
 	}
+
 	return (0);
 }
 /**
@@ -76,7 +88,7 @@ int  read_command(char *program, char **user_input, size_t *n)
 {
 	/** local variables declaration  */
 	ssize_t nb_bytes = 0;
-	int ret;
+	int ret = 1;
 
 	nb_bytes = getline(user_input, n, stdin);
 	ret = handle_CTRD(n, user_input);
@@ -89,10 +101,15 @@ int  read_command(char *program, char **user_input, size_t *n)
 		exit(EXIT_FAIL);
 		/*return (0);*/
 	}
+	/*this condition is logical*/
+	/* read not ok cause minimum one character + \n*/
 	if (nb_bytes  <= 1)
 	{
-		free(*user_input);
-		*user_input = NULL;
+		if (*user_input != NULL)
+		{
+			free(*user_input);
+			*user_input = NULL;
+		}
 		return (0);
 	}
 	/* delete new line character */
@@ -113,10 +130,10 @@ int add_args_cmd_to_list(char *program, char *user_input, info_cmd **head)
 {
 int i = 0;
 char *delimiters = " \n\r\t";
-char *token;
+char *token = NULL;
 info_cmd *inserted_node = NULL;
 
-token = split(user_input, delimiters);
+token = strtok(user_input, delimiters);
 while (token != NULL)
 {
 	if (!is_empty(token))
@@ -129,7 +146,7 @@ while (token != NULL)
 		}
 		i++;
 	}
-	token = split(NULL, delimiters);
+	token = strtok(NULL, delimiters);
 }
 return (i);
 }
