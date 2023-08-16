@@ -15,5 +15,6 @@ int clear_eof(FILE *stream, size_t len);
 int handle_CTRD(size_t *n,  char **user_input);
 int shell_exit(char *prg, int len_args, char **cmd_args, char **env);
 int lunch_builtin(char *prog, int len_args, char **cmd_args, char **env);
+int print_env(char *prg, int len_args, char **cmd_args, char **env);
 #endif
 
