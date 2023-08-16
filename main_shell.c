@@ -38,7 +38,7 @@ int main(int argc, char *argv[], char **env)
 	}
 	while (loop)
 	{
-		display_prompt("($)", 4);
+		display_prompt("($) ", 5);
 		read_ok = read_command(program, &user_input, &n);
 		if (read_ok == -1)
 		{
