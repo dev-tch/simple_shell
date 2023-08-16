@@ -3,6 +3,9 @@
 #include "errors.h"
 #include <stdio.h>
 #include "cleanup.h"
+#include <stdlib.h>
+#include <unistd.h>
+
 /**
 * test - template for built in functions
 * @prg: the initial program that lunch main - example ./shell
@@ -105,4 +108,55 @@ int lunch_builtin(char *prg, int len_args, char  **cmd_args, char **env)
 
 	return (ret);
 }
+/**
+* print_env: Function to print environment variables and their count.
+* @prg: the initial program that lunch main - example ./shell
+* @len_args: number of arguments in command
+* @cmd_args: arguments of command
+* @env: environnement variables
+* @Return: Number of environment variables processed, or 0 on error.
+*/
+int print_env(char *prg, int len_args, char **cmd_args, char **env)
+{
+	/* Check if program or env is NULL*/
+	if (prg == NULL || env == NULL)
+	{
+		return (0); /*Return 0 in case of an error*/
+	}
+	int count = 0;
+	char buffer[1024]; /* Buffer to hold the environment variable strings*/
 
+	/*Loop through each environment variable*/
+	while (*env != NULL)
+	{
+	/*Manually concatenate the environment variable information into buffer*/
+		int length = 0;
+		char *current_env = *env;
+	/*Copy the "Env[count]" part*/
+		char env_count[] = "Env[]: ";
+
+		env_count[4] = count / 10 + '0';
+		env_count[5] = count % 10 + '0';
+		length += write(STDOUT_FILENO, env_count, 8);
+	/*Copy the environment variable string*/
+		while (*current_env != '\0' && length < sizeof(buffer) - 1)
+		{
+			buffer[length++] = *current_env++;
+		}
+	/* Add a newline character and null-terminate the string*/
+		if (length < sizeof(buffer))
+		{
+			buffer[length++] = '\n';
+		}
+	/*Write the manually formatted string to standard output*/
+		ssize_t bytes_written = write(STDOUT_FILENO, buffer, (size_t)length);
+
+		if (bytes_written < 0)
+		{
+			return (0); /* Error in writing*/
+		}
+		count++;
+		env++;
+	}
+	return (count);
+}
