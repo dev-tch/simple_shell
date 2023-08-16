@@ -83,12 +83,14 @@ int lunch_builtin(char *prg, int len_args, char  **cmd_args, char **env)
 	int ret = NOT_BUILT_IN;
 	char *names_builtin[] = {
 		"test",
-		"exit"
+		"exit",
+		"env"
 	};
 
 	int (*builtin_func[]) (char *prg, int len_args, char **cmd, char **env) = {
 		&test,
-		&shell_exit
+		&shell_exit,
+		&print_env
 	};
 
 	/*if command empty string with continue interactive mode*/
@@ -110,7 +112,7 @@ int lunch_builtin(char *prg, int len_args, char  **cmd_args, char **env)
 }
 /**
 * print_env: Function to print environment variables and their count.
-* @prg: the initial program that lunch main - example ./shell
+* @prg: the initial program that lunch main - exp ./shell
 * @len_args: number of arguments in command
 * @cmd_args: arguments of command
 * @env: environnement variables
