@@ -96,10 +96,14 @@ int  read_command(char *program, char **user_input, size_t *n)
 	{
 		return (ret);
 	}
-	if (nb_bytes == -1)
-	{       print_error(program, GETLINE_ERROR, NEW_ERROR);
+	if (nb_bytes == -1 && (errno != 0 && errno != 25))
+	{
+		print_error(program, errno, STD_ERROR);
 		exit(EXIT_FAIL);
-		/*return (0);*/
+	}
+	if (nb_bytes == -1 && (errno == 0 || errno == 25))
+	{
+		exit(EXIT_DONE);
 	}
 	/*this condition is logical*/
 	/* read not ok cause minimum one character + \n*/
