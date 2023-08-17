@@ -5,7 +5,7 @@
 #include "cleanup.h"
 #include <stdlib.h>
 #include <unistd.h>
-
+int print_env(char *prg, int len_args, char **cmd_args, char **env);
 /**
 * test - template for built in functions
 * @prg: the initial program that lunch main - example ./shell
@@ -116,27 +116,31 @@ int lunch_builtin(char *prg, int len_args, char  **cmd_args, char **env)
 * @len_args: number of arguments in command
 * @cmd_args: arguments of command
 * @env: environnement variables
-* @Return: Number of environment variables processed, or 0 on error.
+* @Return: Number of environment variables :w
+processed, or 0 on error.
 */
 int print_env(char *prg, int len_args, char **cmd_args, char **env)
 {
+	char buffer[1024]; /* Buffer to hold the environment variable strings*/
+	char *current_env = *env;
+	size_t length = 0;
+	char env_count[] = "Env[]: ";
+	ssize_t bytes_written;
+	int count = 0;
+	len_args = (len_args == 0) ? 0 : 1;
+	(void)cmd_args;
+	
 	/* Check if program or env is NULL*/
 	if (prg == NULL || env == NULL)
 	{
 		return (0); /*Return 0 in case of an error*/
 	}
-	int count = 0;
-	char buffer[1024]; /* Buffer to hold the environment variable strings*/
 
 	/*Loop through each environment variable*/
 	while (*env != NULL)
 	{
 	/*Manually concatenate the environment variable information into buffer*/
-		int length = 0;
-		char *current_env = *env;
 	/*Copy the "Env[count]" part*/
-		char env_count[] = "Env[]: ";
-
 		env_count[4] = count / 10 + '0';
 		env_count[5] = count % 10 + '0';
 		length += write(STDOUT_FILENO, env_count, 8);
@@ -151,7 +155,7 @@ int print_env(char *prg, int len_args, char **cmd_args, char **env)
 			buffer[length++] = '\n';
 		}
 	/*Write the manually formatted string to standard output*/
-		ssize_t bytes_written = write(STDOUT_FILENO, buffer, (size_t)length);
+		bytes_written = write(STDOUT_FILENO, buffer, (size_t)length);
 
 		if (bytes_written < 0)
 		{
