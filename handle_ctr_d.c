@@ -3,6 +3,7 @@
 #include "strings.h"
 #include <string.h>
 #include <stdio.h>
+#include "cleanup.h"
 /**
 * clear_eof - clear EOF from stdin
 * @stream: stdin stream File
@@ -11,7 +12,7 @@
 */
 int  clear_eof(FILE *stream, size_t len)
 {
-	char buf_tst_eof[1024];
+	char buf_tst_eof[10];
 	int fd_stdin = 0, rd = 0;
 
 	rd = read(fd_stdin, buf_tst_eof, len);
@@ -25,31 +26,47 @@ int  clear_eof(FILE *stream, size_t len)
 /**
 * handle_CTRD - handle key ctr+d in shell
 * @n: the adress of the variable that holds the input buffer
-* @user_input: the typed string in shell
+* @input: the typed string in shell
 * Return: (-1:  break the loop)(1: continue the loop)(2: other task to do)
 */
-int handle_CTRD(size_t *n,  char **user_input)
+int handle_CTRD(size_t *n,  char **input)
 {
-	size_t  len;
+	size_t  len = 0;
+	int err_num = 0;
 
-	len = _strlen(*user_input);
-	if (errno == 0 && (*user_input)[len - 1] != '\n')
+	err_num = errno;
+	if (err_num == 0 && (input == NULL || *input == NULL))
 	{
-		if (!is_empty(*user_input))
+		return (-1);
+	}
+	else if (err_num == 0 && ((*input)[0] == '\0'))
+	{
+		cleanup3(input, n);
+		return (-1);
+	}
+	else
+	{
+		len = _strlen(*input);
+		if (err_num == 0  && len >= 1 && (*input)[len - 1] != '\n')
 		{
-			if (clear_eof(stdin, len))
-				return (1);
+			if (!is_empty(*input))
+			{
+				if (clear_eof(stdin, len))
+				{
+					return (1);
+				}
+				else
+				{
+					cleanup3(input, n);
+					return (-1);
+				}
+			}
 			else
+			{
+				cleanup3(input, n);
 				return (-1);
-		}
-		else
-		{
-			if (*user_input != NULL)
-				free(*user_input);
-
-			*n = 0;
-			return (-1);
+			}
 		}
 	}
-	return (2); /*continue excution of code above*/
+	return (2); /*continue other instructions of read_command*/
 }
