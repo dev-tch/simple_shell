@@ -38,7 +38,10 @@ int main(int argc, char *argv[], char **env)
 	}
 	while (loop)
 	{
-		display_prompt("($) ", 5);
+		if (!display_prompt("($) ", 5))
+		{
+			exit(EXIT_FAIL);
+		}
 		read_ok = read_command(program, &user_input, &n);
 		if (read_ok == -1)
 		{
@@ -99,21 +102,19 @@ int  read_command(char *program, char **user_input, size_t *n)
 	if (nb_bytes == -1 && (errno != 0 && errno != 25))
 	{
 		print_error(program, errno, STD_ERROR);
+		cleanup3(user_input, n);
 		exit(EXIT_FAIL);
 	}
 	if (nb_bytes == -1 && (errno == 0 || errno == 25))
 	{
+		cleanup3(user_input, n);
 		exit(EXIT_DONE);
 	}
 	/*this condition is logical*/
 	/* read not ok cause minimum one character + \n*/
 	if (nb_bytes  <= 1)
 	{
-		if (*user_input != NULL)
-		{
-			free(*user_input);
-			*user_input = NULL;
-		}
+		cleanup3(user_input, n);
 		return (0);
 	}
 	/* delete new line character */
