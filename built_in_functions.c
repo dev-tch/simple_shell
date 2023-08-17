@@ -5,6 +5,8 @@
 #include "cleanup.h"
 #include <stdlib.h>
 #include <unistd.h>
+#define BUFFER_SIZE 1024
+
 int print_env(char *prg, int len_args, char **cmd_args, char **env);
 /**
 * test - template for built in functions
