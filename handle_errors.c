@@ -3,6 +3,7 @@
 #include  <stdio.h>  /*required to include the function perror*/
 #include  <errno.h>  /*reuired toinclude globalvariable errno*/
 #include "errors.h"
+#include <stdio.h>
 /**
 * get_error_value - return the value error
 * @code: error code
@@ -48,29 +49,39 @@ return (": Unknown Error");
 */
 void print_error(char *program, int err_code, int type_error)
 {
-int err_num = 0;
-char *dest;
-char *err_value;
+	/*variables declartion*/
+	int err_num = 0;
+	char *dest  = NULL;
+	char *err_value = NULL;
+	int is_ok = 0;
 
 
-err_num = errno;
-/*test the error exist in errno*/
-if (err_num != 0 && type_error == STD_ERROR)
-{
-	perror(program);
-	errno = 0;
-}
-else
-{
-	/*new defined error*/
-	errno = 0;
+	err_num = errno;
+	/*test the error exist in errno*/
+	if (err_num != 0 && type_error == STD_ERROR && program != NULL)
+	{
+		perror(program);
+		errno = 0;
+		return;
+	}
+
 	err_value = get_error_value(err_code);
-	dest = (char *) malloc((_strlen(program) + _strlen(err_value) - 1));
-	_strcat(dest, program);
-	_strcat(dest, err_value);
-	perror(dest);
-	free(dest);
-}
+	is_ok = err_value != NULL && program != NULL;
+
+	if (err_num != 0 && type_error == NEW_ERROR  && is_ok)
+	{
+		/*new defined error*/
+		errno = 0;
+		dest = (char *) malloc((_strlen(program) + _strlen(err_value) + 1));
+		if (dest != NULL)
+		{
+			_strcpy(dest, program);
+			_strcat(dest, err_value);
+			perror(dest);
+			free(dest);
+			dest = NULL;
+		}
+	}
 }
 
 /**
@@ -83,35 +94,43 @@ else
 */
 void print_err_plus(char *program, int err_code, int type_error, char *cmd_arg)
 {
-int err_num = 0;
-char *dest  = NULL;
-char *err_value = NULL;
-int size = 0;
-char *empty_err = ": ";
-char *new_line  = "\n";
-int fd = 2; /*file descriptor for stderr*/
+	int err_num = 0;
+	char *dest  = NULL;
+	char *err_value = NULL;
+	int size = 0;
+	char *empty_err = ": ";
+	char *new_line  = "\n";
+	int fd = 2; /*file descriptor for stderr*/
+	int is_ok = 0;
 
-err_num = errno;
-/*test the error exist in errno*/
-if (err_num != 0 && type_error == STD_ERROR)
-{
-	perror(program);
-	errno = 0;
-}
-else if (type_error == NEW_ERROR)
-{
-	/*new defined error*/
-	errno = 0;
+	err_num = errno;
+	/*test the error exist in errno*/
+	if (err_num != 0 && type_error == STD_ERROR && program != NULL)
+	{
+		perror(program);
+		errno = 0;
+		return;
+	}
 	err_value = get_error_value(err_code);
-	size = _strlen(program) + _strlen(err_value) + 2  + _strlen(cmd_arg) + 1 + 1;
-	dest = (char *) malloc(sizeof(char) * size);
-	_strcat(dest, program);
-	_strcat(dest, err_value);
-	_strcat(dest, empty_err);
-	_strcat(dest, cmd_arg);
-	_strcat(dest, new_line);
-	write(fd, dest, size);
-	free(dest);
-	dest = NULL;
-}
+	is_ok = err_value != NULL && program != NULL && cmd_arg != NULL;
+
+	if (type_error == NEW_ERROR && is_ok)
+	{
+		/*new defined error*/
+		errno = 0;
+		size = _strlen(program)  + _strlen(err_value) + _strlen(cmd_arg) + 4;
+		dest = (char *) malloc(sizeof(char) * size);
+		if (dest != NULL)
+		{
+			/*_strcat(dest, program);*/
+			_strcpy(dest, program);
+			_strcat(dest, err_value);
+			_strcat(dest, empty_err);
+			_strcat(dest, cmd_arg);
+			_strcat(dest, new_line);
+			write(fd, dest, size);
+			free(dest);
+			dest = NULL;
+		}
+	}
 }
