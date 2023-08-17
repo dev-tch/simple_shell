@@ -11,10 +11,19 @@
 */
 int _strlen(char *str)
 {
+	int len = 0;
+	int i = 0;
 
-	if (*str == '\0')
+	if (str == NULL)
 		return (0);
-	return (1 + _strlen(str + 1));
+
+	while (str[i] != '\0')
+	{
+		len++;
+		i++;
+	}
+
+	return (len);
 }
 
 /**
@@ -26,21 +35,37 @@ int _strlen(char *str)
  */
 char *_strcat(char *dest, char *src)
 {
-	int x = 0;
-	int y = 0;
+	/*variables declaration */
+	/*int x = 0;*/
+	/*int y = 0;*/
+	char *tmp = NULL;
 
-	while (dest[x] != '\0')
+	/*Main _strcat*/
+	if (dest == NULL || src == NULL)
+		return (NULL);
+
+	tmp = dest + _strlen(dest);
+
+	while (src != NULL && *src != '\0')
 	{
-		x++;
+		if (tmp != NULL)
+		{
+			*tmp = *src;
+			tmp++;
+			src++;
+		}
+		else
+		{
+			return (NULL);
+		}
 	}
 
-	while (src[y] != '\0')
+	if (tmp != NULL)
 	{
-		dest[x + y] = src[y];
-		y++;
+		*tmp = '\0';
 	}
-
-	dest[x + y] = '\0';
+	else
+		return (NULL);
 
 	return (dest);
 }
