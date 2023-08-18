@@ -161,3 +161,4 @@ char **list_to_array(info_cmd *h)
 	cmd_args[index] = NULL;
 	return (cmd_args);
 }
+

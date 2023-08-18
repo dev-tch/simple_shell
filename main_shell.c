@@ -5,9 +5,10 @@
 #include "errors.h"
 #include "cleanup.h"
 
-int read_command(char *program, char **user_input, size_t *n);
-int add_args_cmd_to_list(char *program, char *user_input, info_cmd **head);
-int handle_errors(char *program, char *command);
+int  read_command(char *program, char **user_input, size_t *n);
+int  add_args_cmd_to_list(char *program, char *user_input, info_cmd **head);
+int  handle_errors(char *program, char *command);
+void handle_path(char *program, char **env, char *name_cmd, info_cmd **head);
 /**
  * main - entry point
  * @argc: number of arguments
@@ -56,14 +57,14 @@ int main(int argc, char *argv[], char **env)
 		i = add_args_cmd_to_list(program, user_input, &head);
 		if (i > 0 && head != NULL)
 		{
-
+			handle_path(program, env, head->arg, &head);
 			args = list_to_array(head);
 			len_args = list_len(head);
-			/*test is builtin function of shell*/
 			if (_strcmp(args[0], "exit") == 0)
 			{
 				cleanup1(&user_input, &head);
 			}
+			/*test if  builtin function of shell*/
 			loop = lunch_builtin(program, len_args,  args, env);
 			if (loop  == NOT_BUILT_IN)
 			{
@@ -71,6 +72,7 @@ int main(int argc, char *argv[], char **env)
 				{
 					/*lunch the excution of command with process child*/
 					loop = lunch_shell_execution(program, len_args, args, env);
+
 				}
 			}
 		}
@@ -181,4 +183,43 @@ int handle_errors(char *program, char *command)
 		return (0);
 	}
 	return (1);
+}
+/**
+* handle_path - verify if command exist in path
+* @program: initial program that lunch shell
+* @env: environnment variables
+* @name_cmd: command name
+* @head: list contains command name and its arguments
+* Return: void
+*/
+void  handle_path(char *program, char **env, char *name_cmd, info_cmd **head)
+{
+	int builtin    = 0;
+	int test_path  = 0;
+	char *var_path = NULL;
+	info_cmd *head_path;
+	int ret_del   = 1;
+
+	/*test if command is prefixed with directory symbol*/
+	if (*name_cmd == '/' || *name_cmd == '.' || *name_cmd == '~')
+	return;
+	/*test if command is builtin function*/
+	builtin = is_builtin(name_cmd);
+	if (builtin)
+		return;
+
+	test_path = convert_path_to_list(program, env, &head_path);
+	if (test_path)
+	{
+		var_path = lookup_in_path(name_cmd, head_path);
+		if (var_path)
+		{
+			ret_del =  delete_first_node(head);
+			if (ret_del == -1)
+				return;
+			add_node_first(head, var_path);
+			if (head_path != NULL)
+				free_list(head_path);
+		}
+	}
 }

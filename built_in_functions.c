@@ -112,6 +112,37 @@ int lunch_builtin(char *prg, int len_args, char  **cmd_args, char **env)
 
 	return (ret);
 }
+
+/**
+* is_builtin - check if command is builtin function of shell
+* @name_cmd: command name
+* Return: (1 ==> builtin func)(0==> non builtin func)
+*/
+int is_builtin(char *name_cmd)
+{
+	int i = 0, number_of_builtin = 0, ret = 0;
+
+	char *names_builtin[] = {
+		"exit",
+		"env"
+	};
+
+	number_of_builtin = (sizeof(names_builtin) / sizeof(char *));
+	if (is_empty(name_cmd))
+	{
+		return (0);
+	}
+		for (i = 0 ; i < number_of_builtin ; i++)
+	{
+		if (_strcmp(name_cmd, names_builtin[i]) == 0)
+		{
+			ret = 1;
+			break;
+		}
+	}
+
+	return (ret);
+}
 /**
 * print_env: Function to print environment variables and their count.
 * @prg: the initial program that lunch main - exp ./shell
