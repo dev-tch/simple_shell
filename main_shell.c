@@ -183,6 +183,7 @@ int handle_errors(char *program, char *command)
 	err = stat(command, &st);
 	if (err == -1)
 	{       print_error(program, errno, STD_ERROR);
+		errno = 0;
 		return (0);
 	}
 
@@ -191,6 +192,7 @@ int handle_errors(char *program, char *command)
 	if (err == -1)
 	{
 		print_error(program, errno, STD_ERROR);
+		errno = 0;
 		return (0);
 	}
 	return (1);
