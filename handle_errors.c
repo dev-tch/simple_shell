@@ -55,7 +55,9 @@ void print_error(char *program, int err_code, int type_error)
 	char *dest  = NULL;
 	char *err_value = NULL;
 	int is_ok = 0;
-
+	int fd = 2;
+	char *new_line  = "\n";
+	int size = 0;
 
 	err_num = errno;
 	/*test the error exist in errno*/
@@ -69,16 +71,18 @@ void print_error(char *program, int err_code, int type_error)
 	err_value = get_error_value(err_code);
 	is_ok = err_value != NULL && program != NULL;
 
-	if (err_num != 0 && type_error == NEW_ERROR  && is_ok)
+	if (type_error == NEW_ERROR  && is_ok)
 	{
 		/*new defined error*/
 		errno = 0;
-		dest = (char *) malloc((_strlen(program) + _strlen(err_value) + 1));
+		size = _strlen(program) + _strlen(err_value) + 1 + 1;
+		dest = (char *) malloc(size);
 		if (dest != NULL)
 		{
 			_strcpy(dest, program);
 			_strcat(dest, err_value);
-			perror(dest);
+			_strcat(dest, new_line);
+			write(fd, dest, size);
 			free(dest);
 			dest = NULL;
 		}
