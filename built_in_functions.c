@@ -149,7 +149,7 @@ int is_builtin(char *name_cmd)
 * @len_args: number of arguments in command
 * @cmd_args: arguments of command
 * @env: environnement variables
-* @Return: Number of environment variables, or 0 on error.
+* Return: Number of environment variables, or 0 on error.
 */
 int print_env(char *prg, int len_args, char **cmd_args, char **env)
 {
