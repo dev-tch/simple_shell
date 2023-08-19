@@ -5,7 +5,7 @@
 #include "list.h"
 #include "errors.h"
 #include "common.h"
-
+#include <stdio.h>
 /**
 * var_exist - check is variable found in environnement
 * @var_name: name of variable
@@ -45,6 +45,40 @@ int var_exist(char *var_name, char *var_value, info_cmd **env_t)
 	return (0);
 }
 /**
+* var_exist2 - check is variable found and remove it
+* @var_name: name of variable
+* @env_t: list contains environnments
+* Return: (0 variable not found) ( 1 variable exist)
+*/
+int var_exist2(char *var_name, info_cmd **env_t)
+{
+	info_cmd *tmp = *env_t;
+	int var_ok = 0;
+	info_cmd *old = NULL;
+
+	while (tmp != NULL)
+	{
+		var_ok = get_beginsWith(tmp->arg, var_name);
+		if (var_ok)
+		{
+			if (old == NULL)
+			{
+				*env_t = tmp->next;
+			}
+			else
+			{
+				old->next = tmp->next;
+			}
+			free(tmp);
+			var_ok = 1;
+			break;
+		}
+		old = tmp;
+		tmp = tmp->next;
+	}
+	return (var_ok);
+}
+/**
 * set_env -  builtin function to add or modify env variable
 * @prg: initila program
 * @la: number of arguments of command
@@ -80,3 +114,29 @@ int set_env(char *prg, int la, char  **arg, char **env, info_cmd **env_t)
 	return (1);
 }
 /*unset builtin*/
+/**
+* unset_env -  builtin function to remove env variable
+* @prg: initila program
+* @la: number of arguments of command
+* @arg: array of arguments of command
+* @env: array of environnments variables
+* @env_t: list contains environnements
+* Return: (1 to continue the loop in main_shell.c)
+*/
+int unset_env(char *prg, int la, char  **arg, char **env, info_cmd **env_t)
+{
+	int ret = 0;
+	/*unused parameters*/
+	(void)env;
+	if (la != 2)
+	{
+		print_error(prg, ILLIGAL_ARG, NEW_ERROR);
+		return (1);
+	}
+	ret = var_exist2(arg[1], env_t);
+	if (ret == 0)
+	{
+		print_error(prg, VAR_ENV_NOT_FOUND, NEW_ERROR);
+	}
+	return (1);
+}

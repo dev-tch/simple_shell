@@ -91,14 +91,16 @@ int lunch_builtin(char *prg, int la, char  **arg, char **env, info_cmd **env_t)
 		"test",
 		"exit",
 		"env",
-		"setenv"
+		"setenv",
+		"unsetenv"
 	};
 
 	int (*b_f[]) (char *prg, int la, char **arg, char **env, info_cmd **env_t) = {
 		&test,
 		&shell_exit,
 		&print_env,
-		&set_env
+		&set_env,
+		&unset_env
 	};
 
 	/*if command empty string with continue interactive mode*/
@@ -131,7 +133,8 @@ int is_builtin(char *name_cmd)
 	char *names_builtin[] = {
 		"exit",
 		"env",
-		"setenv"
+		"setenv",
+		"unsetenv"
 	};
 
 	number_of_builtin = (sizeof(names_builtin) / sizeof(char *));
