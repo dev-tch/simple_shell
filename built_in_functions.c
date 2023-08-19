@@ -131,7 +131,7 @@ int is_builtin(char *name_cmd)
 	char *names_builtin[] = {
 		"exit",
 		"env",
-		"set_env"
+		"setenv"
 	};
 
 	number_of_builtin = (sizeof(names_builtin) / sizeof(char *));
