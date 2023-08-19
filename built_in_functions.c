@@ -5,7 +5,6 @@
 #include "cleanup.h"
 #include <stdlib.h>
 #include <unistd.h>
-#define BUFFER_SIZE 1024
 
 int print_env(char *prg, int len_args, char **cmd_args, char **env);
 /**
@@ -167,8 +166,8 @@ int print_env(char *prg, int len_args, char **cmd_args, char **env)
 			buf = (char *) malloc(len + 2);
 			if (buf == NULL)
 			{
-			printf("malloc failed");
-			break;
+				print_error(prg, MALLOC_ERROR, NEW_ERROR);
+				break;
 			}
 			_strcpy(buf, env[i]);
 			_strcat(buf, "\n");
