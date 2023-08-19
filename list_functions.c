@@ -90,7 +90,7 @@ if (new_node->arg == NULL)
 free(new_node);
 return (NULL);
 }
-new_node->len = strlen(new_node->arg);
+new_node->len = _strlen(new_node->arg);
 }
 else
 {

@@ -9,6 +9,7 @@
 #define EXIT_DONE     0
 #define NOT_BUILT_IN 3
 #define ILLIGAL_EXIT_NUMBER 16
+#define ILLIGAL_ARG 17
 #include <stdlib.h>
 #include <unistd.h>
 char *get_error_value(unsigned int  err_code);

@@ -5,23 +5,25 @@
 #include "cleanup.h"
 #include <stdlib.h>
 #include <unistd.h>
-
-int print_env(char *prg, int len_args, char **cmd_args, char **env);
+#include "common.h"
+int print_env(char *prg, int la, char **arg, char **env, info_cmd **env_t);
 /**
 * test - template for built in functions
 * @prg: the initial program that lunch main - example ./shell
-* @len_args: number of arguments in command
-* @cmd_args: arguments of command
+* @la: number of arguments in command
+* @arg: arguments of command
 * @env: environnement variables
+* @env_t : list contains environnement
 * Return: (0 to leave the loop) ( value differnt to zero to continue the loop)
 */
-int test(char *prg, int  len_args,  char **cmd_args, char **env)
+int test(char *prg, int  la,  char **arg, char **env, info_cmd **env_t)
 {
 	/* unused parameters */
 	(void)prg;
-	(void)cmd_args;
+	(void)arg;
 	(void)env;
-	len_args = (len_args == 0) ? 0 : 1;
+	la = (la == 0) ? 0 : 1;
+	env_t = (env_t == NULL) ?  NULL : env_t;
 	/*end unused parameters*/
 
 	/*if error print the error and on return */
@@ -36,35 +38,37 @@ int test(char *prg, int  len_args,  char **cmd_args, char **env)
 /**
 * shell_exit - exit interactive mode in shell
 * @prg: the initial program that lunch main - example ./shell
-* @len_args: number of arguments in command
-* @cmd_args: arguments of command
+* @la: number of arguments in command
+* @args: arguments of command
 * @env: environnement variables
+* @env_t: list contains environnements
 * Return: (0 to leave the loop) ( value differnt to zero to continue the loop)
 */
-int shell_exit(char *prg, int len_args,  char **cmd_args, char **env)
+int shell_exit(char *prg, int la,  char **args, char **env, info_cmd **env_t)
 {
 	int num = 0;
 
 	/* declare parameters as unused*/
 	prg = (prg == NULL) ?  NULL : prg;
 	env = (env == NULL) ?  NULL : env;
+	env_t = (env_t == NULL) ?  NULL : env_t;
 
-	if (len_args == 1)
+	if (la == 1)
 	{
-		cleanup2(len_args, &cmd_args);
+		cleanup2(la, &args);
 		exit(EXIT_DONE);
 	}
-	else if (len_args >= 2)
+	else if (la >= 2)
 	{
 		/*convert cmd_args[1] to int */
-		num = _atoi(cmd_args[1]);
-		if (num == 0 && _strcmp(cmd_args[1], "0") != 0)
+		num = _atoi(args[1]);
+		if (num == 0 && _strcmp(args[1], "0") != 0)
 		{
-			print_err_plus(prg, ILLIGAL_EXIT_NUMBER, NEW_ERROR, cmd_args[1]);
+			print_err_plus(prg, ILLIGAL_EXIT_NUMBER, NEW_ERROR, args[1]);
 		}
 		else
 		{
-			cleanup2(len_args, &cmd_args);
+			cleanup2(la, &args);
 			exit(num);
 		}
 	}
@@ -73,39 +77,42 @@ int shell_exit(char *prg, int len_args,  char **cmd_args, char **env)
 /**
 * lunch_builtin - excutes builtin function in shell
 * @prg: the initial program that lunch main - example ./shell
-* @len_args: number of arguments in command
-* @cmd_args: arguments of command
+* @la: number of arguments in command
+* @arg: arguments of command
 * @env: environnement variables
+* @env_t: list contains environnements
 * Return: (0 to leave the loop) ( value differnt to zero to continue the loop)
 */
-int lunch_builtin(char *prg, int len_args, char  **cmd_args, char **env)
+int lunch_builtin(char *prg, int la, char  **arg, char **env, info_cmd **env_t)
 {
 	int i = 0, number_of_builtin = 0;
 	int ret = NOT_BUILT_IN;
 	char *names_builtin[] = {
 		"test",
 		"exit",
-		"env"
+		"env",
+		"setenv"
 	};
 
-	int (*builtin_func[]) (char *prg, int len_args, char **cmd, char **env) = {
+	int (*b_f[]) (char *prg, int la, char **arg, char **env, info_cmd **env_t) = {
 		&test,
 		&shell_exit,
-		&print_env
+		&print_env,
+		&set_env
 	};
 
 	/*if command empty string with continue interactive mode*/
-	if (is_empty(cmd_args[0]))
+	if (is_empty(arg[0]))
 	{
 		return (1);
 	}
 	number_of_builtin = (sizeof(names_builtin) / sizeof(char *));
 	for (i = 0 ; i < number_of_builtin ; i++)
 	{
-		if (_strcmp(cmd_args[0], names_builtin[i]) == 0)
+		if (_strcmp(arg[0], names_builtin[i]) == 0)
 		{
 			ret = 0;
-			ret = ((*builtin_func[i])(prg, len_args, cmd_args, env));
+			ret = ((*b_f[i])(prg, la, arg, env, env_t));
 		}
 	}
 
@@ -123,7 +130,8 @@ int is_builtin(char *name_cmd)
 
 	char *names_builtin[] = {
 		"exit",
-		"env"
+		"env",
+		"set_env"
 	};
 
 	number_of_builtin = (sizeof(names_builtin) / sizeof(char *));
@@ -145,18 +153,20 @@ int is_builtin(char *name_cmd)
 /**
 * print_env - Function to print environment variables and their count.
 * @prg: the initial program that lunch main - exp ./shell
-* @len_args: number of arguments in command
-* @cmd_args: arguments of command
+* @la: number of arguments in command
+* @arg: arguments of command
 * @env: environnement variables
+* @env_t: list contains environnemnts
 * Return: Number of environment variables, or 0 on error.
 */
-int print_env(char *prg, int len_args, char **cmd_args, char **env)
+int print_env(char *prg, int la, char **arg, char **env, info_cmd **env_t)
 {
 	int i = 0, len = 0, fd = 1;
 	char *buf = NULL;
-	(void)cmd_args;
+	(void)arg;
 	(void)prg;
-	len_args = (len_args == 0) ? 0 : len_args;
+	la = (la == 0) ? 0 : la;
+	env_t = (env_t == NULL) ?  NULL : env_t;
 	/*fflush(stdout);*/
 	while (env[i] != NULL)
 	{

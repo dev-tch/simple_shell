@@ -7,4 +7,5 @@ int list_len(const info_cmd *h);
 char **list_to_array(info_cmd *h);
 int delete_first_node(info_cmd **head);
 info_cmd *add_node_first(info_cmd **head, const char *str);
+void conv_env_to_list(info_cmd **list_env, char **env);
 #endif

@@ -27,7 +27,9 @@ int main(int argc, char *argv[], char **env)
 	int i = 0;
 	size_t n = 0;
 	char **args = NULL;
+	info_cmd *list_env = NULL;
 	int len_args = 0;
+	char **new_env = NULL;
 
 	if (argc >= 0)
 	{
@@ -37,6 +39,7 @@ int main(int argc, char *argv[], char **env)
 	{
 		exit(EXIT_FAIL);
 	}
+	conv_env_to_list(&list_env, env);
 	while (loop)
 	{
 		if (!display_prompt("($) ", 5))
@@ -53,33 +56,41 @@ int main(int argc, char *argv[], char **env)
 		{
 			continue;
 		}
-
 		i = add_args_cmd_to_list(program, user_input, &head);
 		if (i > 0 && head != NULL)
 		{
-			handle_path(program, env, head->arg, &head);
+			new_env = list_to_array(list_env);
+			handle_path(program, new_env, head->arg, &head);
 			args = list_to_array(head);
 			len_args = list_len(head);
 			if (_strcmp(args[0], "exit") == 0)
 			{
-				cleanup1(&user_input, &head);
+				/*cleanup1(&user_input, &head);*/
+				cleanup3(&user_input, &n);
+				if (head != NULL)
+					free_list(head);
+				/*cleanup(&user_input, &head, len_args, &args);*/
+				cleanup2(list_len(list_env), &new_env);
+				if (list_env != NULL)
+					free_list(list_env);
 			}
 			/*test if  builtin function of shell*/
-			loop = lunch_builtin(program, len_args,  args, env);
+			loop = lunch_builtin(program, len_args,  args, new_env, &list_env);
 			if (loop  == NOT_BUILT_IN)
 			{
 				if (handle_errors(program, args[0]) == 1)
 				{
 					/*lunch the excution of command with process child*/
-					loop = lunch_shell_execution(program, len_args, args, env);
+					loop = lunch_shell_execution(program, len_args, args, new_env);
 
 				}
 			}
 		}
 		/*after each process of command*/
 		cleanup(&user_input, &head, len_args, &args);
+		cleanup2(list_len(list_env), &new_env);
 	}
-
+	free_list(list_env);
 	return (0);
 }
 /**
@@ -197,7 +208,7 @@ void  handle_path(char *program, char **env, char *name_cmd, info_cmd **head)
 	int builtin    = 0;
 	int test_path  = 0;
 	char *var_path = NULL;
-	info_cmd *head_path;
+	info_cmd *head_path = NULL;
 	int ret_del   = 1;
 
 	/*test if command is prefixed with directory symbol*/
@@ -212,7 +223,7 @@ void  handle_path(char *program, char **env, char *name_cmd, info_cmd **head)
 	if (test_path)
 	{
 		var_path = lookup_in_path(name_cmd, head_path);
-		if (var_path)
+		if (var_path != NULL)
 		{
 			ret_del =  delete_first_node(head);
 			if (ret_del == -1)
@@ -220,6 +231,8 @@ void  handle_path(char *program, char **env, char *name_cmd, info_cmd **head)
 			add_node_first(head, var_path);
 			if (head_path != NULL)
 				free_list(head_path);
+			if (var_path != NULL)
+				free(var_path);
 		}
 	}
 }

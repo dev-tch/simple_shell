@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "strings.h"
 #include <string.h>
 #include "new_types.h"
 #include <stdio.h>
@@ -13,10 +14,10 @@ int display_prompt(char *str, int size);
 int lunch_shell_execution(char *prg, int len_args, char **args, char **env);
 int clear_eof(FILE *stream, size_t len);
 int handle_CTRD(size_t *n,  char **user_input);
-int shell_exit(char *prg, int len_args, char **cmd_args, char **env);
-int lunch_builtin(char *prog, int len_args, char **cmd_args, char **env);
+int shell_exit(char *prg, int la, char **arg, char **env, info_cmd **env_t);
+int lunch_builtin(char *prg, int la, char **arg, char **env, info_cmd **env_t);
 int is_builtin(char *name_cmd);
-int print_env(char *prg, int len_args, char **cmd_args, char **env);
+int print_env(char *prg, int la, char **arg, char **env, info_cmd **env_t);
 int get_beginsWith(char *src, char *pattern);
 char *get_path_value(char **env);
 int convert_path_to_list(char *prg, char **env,  info_cmd **head_path);

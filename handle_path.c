@@ -60,6 +60,31 @@ char *get_path_value(char **env)
 }
 
 /**
+* is_unique_entry_path - search if path has delimiter :
+* @prg : initila program shell
+* @head_path : list contains folders of path
+* @path_ptr : pointer to value path
+* Return: (0 - no node added ) (1 : one node appended) (2: exec other task)
+*/
+int is_unique_entry_path(char *prg, char *path_ptr, info_cmd **head_path)
+{
+	info_cmd *inserted_node = NULL;
+	char *ret_ptr = NULL;
+
+	ret_ptr = _strchr(path_ptr, ':');
+	if (ret_ptr == NULL)
+	{
+		inserted_node = add_node_end(head_path, path_ptr);
+		if (inserted_node == NULL)
+		{
+			print_error(prg, MALLOC_ERROR, NEW_ERROR);
+			return (0);
+		}
+		return (1);
+	}
+	return (2);
+}
+/**
 * convert_path_to_list - parse the path value to list
 * @prg: initial program that lunch shell
 * @env: array of environnements variables
@@ -68,17 +93,20 @@ char *get_path_value(char **env)
 */
 int convert_path_to_list(char *prg, char **env,  info_cmd **head_path)
 {
-	int i = 0;
-	char *delimiters = ":";
-	char *token = NULL;
+	int i = 0, uniq = 0;
 	info_cmd *inserted_node = NULL;
-	char *path_ptr = NULL;
-
+	char *path_ptr = NULL, *token = NULL, *delimiters = ":";
 	/*test if path ok*/
 	path_ptr = get_path_value(env);
 	if (path_ptr == NULL)
 		return (0);
-
+	/*test if path not conatains seperator :*/
+	if (path_ptr != NULL)
+	{
+		uniq = is_unique_entry_path(prg, path_ptr, head_path);
+		if (uniq != 2)
+			return (uniq);
+	}
 	token = strtok(path_ptr, delimiters);
 	while (token != NULL)
 	{
@@ -109,7 +137,7 @@ char *lookup_in_path(char *name_cmd, info_cmd *head_path)
 {
 
 	/*loop  all nodes of head_path (all folders)*/
-	static char fold_file[100];
+	char fold_file[1024];
 	struct stat st;
 	int file_ok = 0;
 	int exec_ok = 0;
@@ -133,7 +161,9 @@ char *lookup_in_path(char *name_cmd, info_cmd *head_path)
 			continue;
 		}
 		{
-			fold = fold_file;
+			/*fold = fold_file;*/
+			fold = (char *) malloc(1024);
+			_strcpy(fold, fold_file);
 			break;
 		}
 	}
