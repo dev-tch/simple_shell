@@ -144,58 +144,39 @@ int is_builtin(char *name_cmd)
 	return (ret);
 }
 /**
-* print_env: Function to print environment variables and their count.
+* print_env - Function to print environment variables and their count.
 * @prg: the initial program that lunch main - exp ./shell
 * @len_args: number of arguments in command
 * @cmd_args: arguments of command
 * @env: environnement variables
-* @Return: Number of environment variables :w
-processed, or 0 on error.
+* @Return: Number of environment variables, or 0 on error.
 */
 int print_env(char *prg, int len_args, char **cmd_args, char **env)
 {
-	char buffer[1024]; /* Buffer to hold the environment variable strings*/
-	char *current_env = *env;
-	size_t length = 0;
-	char env_count[] = "Env[]: ";
-	ssize_t bytes_written;
-	int count = 0;
-	len_args = (len_args == 0) ? 0 : 1;
+	int i = 0, len = 0, fd = 1;
+	char *buf = NULL;
 	(void)cmd_args;
-	
-	/* Check if program or env is NULL*/
-	if (prg == NULL || env == NULL)
+	(void)prg;
+	len_args = (len_args == 0) ? 0 : len_args;
+	/*fflush(stdout);*/
+	while (env[i] != NULL)
 	{
-		return (0); /*Return 0 in case of an error*/
+		len = _strlen(env[i]);
+		if (len >= 0)
+		{
+			buf = (char *) malloc(len + 2);
+			if (buf == NULL)
+			{
+			printf("malloc failed");
+			break;
+			}
+			_strcpy(buf, env[i]);
+			_strcat(buf, "\n");
+			write(fd, buf, len + 1);
+			if (buf != NULL)
+			free(buf);
+		}
+		i++;
 	}
-
-	/*Loop through each environment variable*/
-	while (*env != NULL)
-	{
-	/*Manually concatenate the environment variable information into buffer*/
-	/*Copy the "Env[count]" part*/
-		env_count[4] = count / 10 + '0';
-		env_count[5] = count % 10 + '0';
-		length += write(STDOUT_FILENO, env_count, 8);
-	/*Copy the environment variable string*/
-		while (*current_env != '\0' && length < sizeof(buffer) - 1)
-		{
-			buffer[length++] = *current_env++;
-		}
-	/* Add a newline character and null-terminate the string*/
-		if (length < sizeof(buffer))
-		{
-			buffer[length++] = '\n';
-		}
-	/*Write the manually formatted string to standard output*/
-		bytes_written = write(STDOUT_FILENO, buffer, (size_t)length);
-
-		if (bytes_written < 0)
-		{
-			return (0); /* Error in writing*/
-		}
-		count++;
-		env++;
-	}
-	return (count);
+	return (1);
 }
