@@ -13,23 +13,22 @@
 * @la: number of arguments in command
 * @args: arguments of command
 * @env: environnement variables
-* @env_t: list contains environnements
+* @env_l: list contains environnements
+* @alia_l: list contains alias
 * Return: (0 to leave the loop) ( values differnt to zero to continue the loop)
 */
-int shell_exit(char *prg, int la,  char **args, char **env, info_cmd **env_t)
+int shell_exit(char *prg, int la,  char **args, char **env, LinkedList **env_l,
+LinkedList **alia_l)
 {
 	int num = 0;
 
 	/* declare parameters as unused*/
-	prg = (prg == NULL) ?  NULL : prg;
-	env = (env == NULL) ?  NULL : env;
-	env_t = (env_t == NULL) ?  NULL : env_t;
-
 	if (la == 1)
 	{
 		cleanupArray(la, &args);
-		cleanupList(env_t);
-		cleanupArray(list_len(*env_t), &env);
+		cleanupList(env_l);
+		cleanupList(alia_l);
+		cleanupArray(list_len(*env_l), &env);
 		exit(EXIT_DONE);
 	}
 	else if (la >= 2)
@@ -42,9 +41,10 @@ int shell_exit(char *prg, int la,  char **args, char **env, info_cmd **env_t)
 		}
 		else
 		{
-			cleanupList(env_t);
+			cleanupList(alia_l);
+			cleanupList(env_l);
 			cleanupArray(la, &args);
-			cleanupArray(list_len(*env_t), &env);
+			cleanupArray(list_len(*env_l), &env);
 			exit(num);
 		}
 	}
@@ -56,10 +56,12 @@ int shell_exit(char *prg, int la,  char **args, char **env, info_cmd **env_t)
 * @la: number of arguments in command
 * @arg: arguments of command
 * @env: environnement variables
-* @env_t: list contains environnements
+* @env_l: list contains environnements
+* @alia_l: list contains alias
 * Return: (0 to leave the loop) ( value differnt to zero to continue the loop)
 */
-int lunch_builtin(char *prg, int la, char  **arg, char **env, info_cmd **env_t)
+int lunch_builtin(char *prg, int la, char  **arg, char **env,
+LinkedList **env_l, LinkedList **alia_l)
 {
 	int i = 0, number_of_builtin = 0;
 	int ret = NOT_BUILT_IN;
@@ -67,14 +69,17 @@ int lunch_builtin(char *prg, int la, char  **arg, char **env, info_cmd **env_t)
 		"exit",
 		"env",
 		"setenv",
-		"unsetenv"
+		"unsetenv",
+		"alias"
 	};
 
-	int (*b_f[]) (char *prg, int la, char **arg, char **env, info_cmd **env_t) = {
+	int (*b_f[]) (char *prg, int la, char **arg, char **env, LinkedList **env_l,
+LinkedList **alia_l) = {
 		&shell_exit,
 		&print_env,
 		&set_env,
-		&unset_env
+		&unset_env,
+		&doAlias
 	};
 
 	/*if command empty string with continue interactive mode*/
@@ -88,7 +93,7 @@ int lunch_builtin(char *prg, int la, char  **arg, char **env, info_cmd **env_t)
 		if (_strcmp(arg[0], names_builtin[i]) == 0)
 		{
 			ret = 0;
-			ret = ((*b_f[i])(prg, la, arg, env, env_t));
+			ret = ((*b_f[i])(prg, la, arg, env, env_l, alia_l));
 		}
 	}
 
@@ -108,7 +113,8 @@ int is_builtin(char *name_cmd)
 		"exit",
 		"env",
 		"setenv",
-		"unsetenv"
+		"unsetenv",
+		"alias"
 	};
 
 	number_of_builtin = (sizeof(names_builtin) / sizeof(char *));
@@ -133,17 +139,20 @@ int is_builtin(char *name_cmd)
 * @la: number of arguments in command
 * @arg: arguments of command
 * @env: environnement variables
-* @env_t: list contains environnemnts
+* @env_l: list contains environnemnts
+* @alia_l: list contains alias
 * Return: Number of environment variables, or 0 on error.
 */
-int print_env(char *prg, int la, char **arg, char **env, info_cmd **env_t)
+int print_env(char *prg, int la, char **arg, char **env,
+LinkedList **env_l, LinkedList **alia_l)
 {
 	int i = 0, len = 0, fd = 1;
 	char *buf = NULL;
 	(void)arg;
 	(void)prg;
 	la = (la == 0) ? 0 : la;
-	env_t = (env_t == NULL) ?  NULL : env_t;
+	env_l = (env_l == NULL) ?  NULL : env_l;
+	alia_l = (alia_l == NULL) ?  NULL : alia_l;
 	/*fflush(stdout);*/
 	while (env[i] != NULL)
 	{

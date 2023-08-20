@@ -13,9 +13,9 @@
 * @env_t: list contains environnments
 * Return: (0 variable not found) ( 1 variable exist)
 */
-int var_exist(char *var_name, char *var_value, info_cmd **env_t)
+int var_exist(char *var_name, char *var_value, LinkedList **env_t)
 {
-	info_cmd *tmp = NULL;
+	LinkedList *tmp = NULL;
 	int var_ok = 0;
 	char *old_data = NULL;
 	char *dest = NULL;
@@ -50,11 +50,11 @@ int var_exist(char *var_name, char *var_value, info_cmd **env_t)
 * @env_t: list contains environnments
 * Return: (0 variable not found) ( 1 variable exist)
 */
-int var_exist2(char *var_name, info_cmd **env_t)
+int var_exist2(char *var_name, LinkedList **env_t)
 {
-	info_cmd *tmp = *env_t;
+	LinkedList *tmp = *env_t;
 	int var_ok = 0;
-	info_cmd *old = NULL;
+	LinkedList *old = NULL;
 
 	while (tmp != NULL)
 	{
@@ -84,13 +84,16 @@ int var_exist2(char *var_name, info_cmd **env_t)
 * @la: number of arguments of command
 * @arg: array of arguments of command
 * @env: array of environnments variables
-* @env_t: list contains environnements
+* @env_l: list contains environnements
+* @alia_l: list contains alias
 * Return: (1 to continue the loop in main_shell.c)
 */
-int set_env(char *prg, int la, char  **arg, char **env, info_cmd **env_t)
+int set_env(char *prg, int la, char  **arg, char **env,
+LinkedList **env_l, LinkedList **alia_l)
 {
 	int ret = 0;
 	char *dest = NULL;
+	(void) alia_l;
 	/*error if illigal arguments*/
 	/*get the index of variable from env*/
 	/*unused parameters*/
@@ -100,7 +103,7 @@ int set_env(char *prg, int la, char  **arg, char **env, info_cmd **env_t)
 		print_error(prg, ILLIGAL_ARG, NEW_ERROR);
 		return (1);
 	}
-	ret = var_exist(arg[1], arg[2], env_t);
+	ret = var_exist(arg[1], arg[2], env_l);
 	/*if vraiable is new ===> create*/
 	if (ret == 0)
 	{
@@ -108,7 +111,7 @@ int set_env(char *prg, int la, char  **arg, char **env, info_cmd **env_t)
 		_strcpy(dest, arg[1]);
 		_strcat(dest, "=");
 		_strcat(dest, arg[2]);
-		add_node_end(env_t, dest);
+		add_node_end(env_l, dest);
 		free(dest);
 	}
 	return (1);
@@ -120,12 +123,15 @@ int set_env(char *prg, int la, char  **arg, char **env, info_cmd **env_t)
 * @la: number of arguments of command
 * @arg: array of arguments of command
 * @env: array of environnments variables
-* @env_t: list contains environnements
+* @env_l: list contains environnements
+* @alia_l: list contains alias
 * Return: (1 to continue the loop in main_shell.c)
 */
-int unset_env(char *prg, int la, char  **arg, char **env, info_cmd **env_t)
+int unset_env(char *prg, int la, char  **arg, char **env,
+LinkedList **env_l, LinkedList **alia_l)
 {
 	int ret = 0;
+	(void) alia_l;
 	/*unused parameters*/
 	(void)env;
 	if (la != 2)
@@ -133,7 +139,7 @@ int unset_env(char *prg, int la, char  **arg, char **env, info_cmd **env_t)
 		print_error(prg, ILLIGAL_ARG, NEW_ERROR);
 		return (1);
 	}
-	ret = var_exist2(arg[1], env_t);
+	ret = var_exist2(arg[1], env_l);
 	if (ret == 0)
 	{
 		print_error(prg, VAR_ENV_NOT_FOUND, NEW_ERROR);

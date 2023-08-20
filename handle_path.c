@@ -66,9 +66,9 @@ char *get_path_value(char **env)
 * @path_ptr : pointer to value path
 * Return: (0 - no node added ) (1 : one node appended) (2: exec other task)
 */
-int is_unique_entry_path(char *prg, char *path_ptr, info_cmd **head_path)
+int is_unique_entry_path(char *prg, char *path_ptr, LinkedList **head_path)
 {
-	info_cmd *inserted_node = NULL;
+	LinkedList *inserted_node = NULL;
 	char *ret_ptr = NULL;
 
 	ret_ptr = _strchr(path_ptr, ':');
@@ -91,10 +91,10 @@ int is_unique_entry_path(char *prg, char *path_ptr, info_cmd **head_path)
 * @head_path: list contains  folders of variable PATH
 * Return: (0==> no node in head_path) ( n: number of node in head_path)
 */
-int convert_path_to_list(char *prg, char **env,  info_cmd **head_path)
+int convert_path_to_list(char *prg, char **env,  LinkedList **head_path)
 {
 	int i = 0, uniq = 0;
-	info_cmd *inserted_node = NULL;
+	LinkedList *inserted_node = NULL;
 	char *path_ptr = NULL, *token = NULL, *delimiters = ":";
 	/*test if path ok*/
 	path_ptr = get_path_value(env);
@@ -133,7 +133,7 @@ int convert_path_to_list(char *prg, char **env,  info_cmd **head_path)
 * @head_path: list contains folders
 * Return: pointer to found path
 */
-char *lookup_in_path(char *name_cmd, info_cmd *head_path)
+char *lookup_in_path(char *name_cmd, LinkedList *head_path)
 {
 
 	/*loop  all nodes of head_path (all folders)*/
