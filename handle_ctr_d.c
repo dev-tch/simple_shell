@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "cleanup.h"
+
 /**
 * clear_eof - clear EOF from stdin
 * @stream: stdin stream File
