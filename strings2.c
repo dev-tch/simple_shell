@@ -57,7 +57,7 @@ char *_strchr(char *s, char c)
  * @str: input string
  * @separators: separator character
  *
- * Return: pointer to the first token, NULL if no more tokens found
+ * Return: pointer to the first token, or NULL if no more tokens found
  */
 
 char *split(char *str, char *separators)
