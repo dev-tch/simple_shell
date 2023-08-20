@@ -122,7 +122,7 @@ void print_err_plus(char *program, int err_code, int type_error, char *cmd_arg)
 
 	if (type_error == NEW_ERROR && is_ok)
 	{
-		/*new defined error*/
+		/*a new defined error*/
 		errno = 0;
 		size = _strlen(program)  + _strlen(err_value) + _strlen(cmd_arg) + 4;
 		dest = (char *) malloc(sizeof(char) * size);
