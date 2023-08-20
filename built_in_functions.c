@@ -52,7 +52,7 @@ int shell_exit(char *prg, int la,  char **args, char **env, info_cmd **env_t)
 }
 /**
 * lunch_builtin - excutes builtin function in shell
-* @prg: the initial program that lunch main - exp ./shell
+* @prg: the initial program that lunch main - example ./shell
 * @la: number of arguments in command
 * @arg: arguments of command
 * @env: environnement variables
