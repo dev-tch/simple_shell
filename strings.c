@@ -96,7 +96,7 @@ char *_strcpy(char *dest, char *src)
 /**
 *_strdup - new pointer to copied string
 *@str: string
-*Return: pointer to string
+*Return: a pointer to string
 */
 char *_strdup(char *str)
 {
