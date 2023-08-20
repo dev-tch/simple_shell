@@ -1,36 +1,21 @@
 #ifndef NEW_TYPES_H
 #define NEW_TYPES_H
 
-typedef struct listcmd_t  info_cmd;
+typedef struct list_data_shell  LinkedList;
 /**
- * struct listcmd_t - list cmd_name and arguments
- * @arg: command argument
- * @len: lenght of an argument
+ * struct list_data_shell - list to handle shell data : envs, cmds, alias ...
+ * @arg: data of each node
+ * @len: length of data
+ * @idx_sep:  index of character  '=' in data (for case alias)
  * @next: next node adress
  *
- * Description: head of list = command name; rest = arguments of command
+ * Description: helper list to hold data for processing shell commands
  */
-struct listcmd_t
+struct list_data_shell
 {
 char *arg;
 int len;
-info_cmd *next;
+int idx_sep;
+LinkedList *next;
 };
-
-typedef struct alias_t  Alias;
-/**
- * struct alias_t - structure contains shorcuts of command
- * @name:  name of alias
- * @value: real command with its arguments
- * @next:  next node adress
- *
- * Description: this will be used in linked list , each node(name, value)
- */
-struct alias_t
-{
-char *name;
-char *value;
-Alias *next;
-};
-
 #endif

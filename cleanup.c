@@ -56,7 +56,7 @@ void cleanupInput(char **input, size_t *n)
 * @head: list of nodes
 * Return: void
 */
-void cleanupList(info_cmd **head)
+void cleanupList(LinkedList **head)
 {
 	/* condition to ovoid error double free detected*/
 	if (head == NULL || *head == NULL)

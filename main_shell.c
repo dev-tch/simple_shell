@@ -6,9 +6,9 @@
 #include "cleanup.h"
 
 int  read_command(char *program, char **user_input, size_t *n);
-int  add_args_cmd_to_list(char *program, char *user_input, info_cmd **head);
+int  add_args_cmd_to_list(char *program, char *user_input, LinkedList **head);
 int  handle_errors(char *program, char *command);
-void handle_path(char *program, char **env, char *name_cmd, info_cmd **head);
+void handle_path(char *program, char **env, char *name_cmd, LinkedList **head);
 /**
  * main - entry point
  * @argc: number of arguments
@@ -20,16 +20,17 @@ int main(int argc, char *argv[], char **env)
 {
 	/*local variables */
 	int loop = 1;
-	info_cmd *head = NULL;
+	LinkedList *head = NULL;
 	char *user_input = NULL;
 	char *program = NULL;
 	int read_ok = 1;
 	int i = 0;
 	size_t n = 0;
 	char **args = NULL;
-	info_cmd *list_env = NULL;
+	LinkedList *list_env = NULL;
 	int len_args = 0;
 	char **new_env = NULL;
+	LinkedList *alia_l = NULL;
 
 	if (argc >= 0)
 	{
@@ -75,7 +76,7 @@ int main(int argc, char *argv[], char **env)
 				cleanupList(&head);
 			}
 			/*test if  builtin function of shell*/
-			loop = lunch_builtin(program, len_args,  args, new_env, &list_env);
+			loop = lunch_builtin(program, len_args,  args, new_env, &list_env, &alia_l);
 			if (loop  == NOT_BUILT_IN)
 			{
 				if (handle_errors(program, args[0]) == 1)
@@ -93,6 +94,7 @@ int main(int argc, char *argv[], char **env)
 		cleanupArray(list_len(list_env), &new_env);
 	}
 	cleanupList(&list_env);
+	/*cleanupList(&alia_l);*/
 	return (0);
 }
 /**
@@ -146,12 +148,12 @@ int  read_command(char *program, char **user_input, size_t *n)
 * @head: pointer to pointer to the head node of list
 * Return: number of nodes added to list
 */
-int add_args_cmd_to_list(char *program, char *user_input, info_cmd **head)
+int add_args_cmd_to_list(char *program, char *user_input, LinkedList **head)
 {
 int i = 0;
 char *delimiters = " \n\r\t";
 char *token = NULL;
-info_cmd *inserted_node = NULL;
+LinkedList *inserted_node = NULL;
 
 token = strtok(user_input, delimiters);
 while (token != NULL)
@@ -207,12 +209,12 @@ int handle_errors(char *program, char *command)
 * @head: list contains command name and its arguments
 * Return: void
 */
-void  handle_path(char *program, char **env, char *name_cmd, info_cmd **head)
+void  handle_path(char *program, char **env, char *name_cmd, LinkedList **head)
 {
 	int builtin    = 0;
 	int test_path  = 0;
 	char *var_path = NULL;
-	info_cmd *head_path = NULL;
+	LinkedList *head_path = NULL;
 	int ret_del   = 1;
 
 	/*test if command is prefixed with directory symbol*/

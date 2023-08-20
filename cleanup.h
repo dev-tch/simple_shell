@@ -4,5 +4,5 @@
 #include <stddef.h>
 void cleanupArray(int len_args, char ***args);
 void cleanupInput(char **input, size_t *n);
-void cleanupList(info_cmd **head);
+void cleanupList(LinkedList **head);
 #endif

@@ -9,16 +9,13 @@
 *Return: the adress of new node
 */
 
-info_cmd *add_node_end(info_cmd **head, const char *str)
+LinkedList *add_node_end(LinkedList **head, const char *str)
 {
-	info_cmd  *new_node;
-	info_cmd  *temp;
+	LinkedList  *new_node, *temp;
 
-	new_node = malloc(sizeof(info_cmd));
+	new_node = malloc(sizeof(LinkedList));
 	if (new_node == NULL)
-	{
 		return (NULL);
-	}
 	/*initilize next node */
 	new_node->next = NULL; /*fix the problem of double free dtected*/
 	if (str != NULL)
@@ -29,13 +26,15 @@ info_cmd *add_node_end(info_cmd **head, const char *str)
 			free(new_node);
 			return (NULL);
 		}
-	new_node->len = _strlen(new_node->arg);
+		new_node->len = _strlen(new_node->arg);
+		new_node->idx_sep = get_index_sep(new_node->arg, '=');
 	} /*if str!=NULL*/
 
 	else
 	{
 		new_node->arg  = NULL;
 		new_node->len  = 0;
+		new_node->idx_sep = 0;
 	}
 	if (*head == NULL)
 	{
@@ -57,9 +56,9 @@ info_cmd *add_node_end(info_cmd **head, const char *str)
 * @head: pointer of pointers to nodes
 *Return: void
 */
-void free_list(info_cmd *head)
+void free_list(LinkedList *head)
 {
-	info_cmd *temp;
+	LinkedList *temp;
 
 	while (head != NULL)
 	{
@@ -76,35 +75,39 @@ void free_list(info_cmd *head)
 * @str: string of new node
 * Return: pointer to head of list
 */
-info_cmd *add_node_first(info_cmd **head, const char *str)
+LinkedList *add_node_first(LinkedList **head, const char *str)
 {
-info_cmd *new_node;
-new_node = malloc(sizeof(info_cmd));
-if (new_node == NULL)
-return (NULL);
-if (str != NULL)
-{
-new_node->arg = _strdup(str);
-if (new_node->arg == NULL)
-{
-free(new_node);
-return (NULL);
-}
-new_node->len = _strlen(new_node->arg);
-}
-else
-{
-new_node->arg = NULL;
-new_node->len = 0;
-}
-if (head != NULL)
-{
-new_node->next = *head;
-*head = new_node;
-}
-else
-head = &new_node;
-return (new_node);
+	LinkedList *new_node;
+
+	new_node = malloc(sizeof(LinkedList));
+
+	if (new_node == NULL)
+		return (NULL);
+	if (str != NULL)
+	{
+		new_node->arg = _strdup(str);
+		if (new_node->arg == NULL)
+		{
+			free(new_node);
+			return (NULL);
+		}
+	new_node->len = _strlen(new_node->arg);
+	new_node->idx_sep = get_index_sep(new_node->arg, '=');
+	}
+	else
+	{
+		new_node->arg = NULL;
+		new_node->len = 0;
+		new_node->idx_sep = 0;
+	}
+	if (head != NULL)
+	{
+		new_node->next = *head;
+		*head = new_node;
+	}
+	else
+		head = &new_node;
+	return (new_node);
 }
 
 /**
@@ -112,15 +115,16 @@ return (new_node);
 * @h: pointer to head  of list
 * Return: size of list
 */
-int list_len(const info_cmd *h)
+int list_len(const LinkedList *h)
 {
-int nb = 0;
-while (h != NULL)
-{
-	nb++;
-	h = h->next;
-}
-return (nb);
+	int nb = 0;
+
+	while (h != NULL)
+	{
+		nb++;
+		h = h->next;
+	}
+	return (nb);
 }
 
 /**
@@ -128,7 +132,7 @@ return (nb);
 * @h: head of list
 * Return: array of constant pointers
 */
-char **list_to_array(info_cmd *h)
+char **list_to_array(LinkedList *h)
 {
 	int nb_nodes = 0, index = 0, i = 0;
 	char **cmd_args;
