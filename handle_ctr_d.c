@@ -7,7 +7,7 @@
 /**
 * clear_eof - clear EOF from stdin
 * @stream: stdin stream File
-* @len: lenght of command enterd to stdin
+* @len: a lenght of command enterd to stdin
 * Return: void
 */
 int  clear_eof(FILE *stream, size_t len)
