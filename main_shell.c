@@ -40,7 +40,9 @@ int main(int argc, char *argv[], char **env)
 		exit(EXIT_FAIL);
 	}
 
+	/*gloable List ==> contains environnements variables of shell*/
 	conv_env_to_list(&list_env, env);
+
 	while (loop)
 	{
 		if (isatty(STDIN_FILENO))
@@ -69,14 +71,8 @@ int main(int argc, char *argv[], char **env)
 			len_args = list_len(head);
 			if (_strcmp(args[0], "exit") == 0)
 			{
-				/*cleanup1(&user_input, &head);*/
-				cleanup3(&user_input, &n);
-				if (head != NULL)
-					free_list(head);
-				/*cleanup(&user_input, &head, len_args, &args);*/
-				cleanup2(list_len(list_env), &new_env);
-				if (list_env != NULL)
-					free_list(list_env);
+				cleanupInput(&user_input, &n);
+				cleanupList(&head);
 			}
 			/*test if  builtin function of shell*/
 			loop = lunch_builtin(program, len_args,  args, new_env, &list_env);
@@ -91,10 +87,12 @@ int main(int argc, char *argv[], char **env)
 			}
 		}
 		/*after each process of command*/
-		cleanup(&user_input, &head, len_args, &args);
-		cleanup2(list_len(list_env), &new_env);
+		/*cleanup(&user_input, &head, len_args, &args);*/
+		cleanupInput(&user_input, &n);
+		cleanupList(&head);
+		cleanupArray(list_len(list_env), &new_env);
 	}
-	free_list(list_env);
+	cleanupList(&list_env);
 	return (0);
 }
 /**
@@ -119,19 +117,19 @@ int  read_command(char *program, char **user_input, size_t *n)
 	if (nb_bytes == -1 && (errno != 0 && errno != 25))
 	{
 		print_error(program, errno, STD_ERROR);
-		cleanup3(user_input, n);
+		cleanupInput(user_input, n);
 		exit(EXIT_FAIL);
 	}
 	if (nb_bytes == -1 && (errno == 0 || errno == 25))
 	{
-		cleanup3(user_input, n);
+		cleanupInput(user_input, n);
 		exit(EXIT_DONE);
 	}
 	/*this condition is logical*/
 	/* read not ok cause minimum one character + \n*/
 	if (nb_bytes  <= 1)
 	{
-		cleanup3(user_input, n);
+		cleanupInput(user_input, n);
 		return (0);
 	}
 	/* delete new line character */

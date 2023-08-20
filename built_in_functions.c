@@ -6,35 +6,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "common.h"
-int print_env(char *prg, int la, char **arg, char **env, info_cmd **env_t);
-/**
-* test - template for built in functions
-* @prg: the initial program that lunch main - example ./shell
-* @la: number of arguments in command
-* @arg: arguments of command
-* @env: environnement variables
-* @env_t : list contains environnement
-* Return: (0 to leave the loop) ( value differnt to zero to continue the loop)
-*/
-int test(char *prg, int  la,  char **arg, char **env, info_cmd **env_t)
-{
-	/* unused parameters */
-	(void)prg;
-	(void)arg;
-	(void)env;
-	la = (la == 0) ? 0 : 1;
-	env_t = (env_t == NULL) ?  NULL : env_t;
-	/*end unused parameters*/
 
-	/*if error print the error and on return */
-	print_error("test", 100, NEW_ERROR);
-
-	/*if echec that deamnds to quit the loop of main_shell*/
-	/* ==> return 0*/
-
-	/*return 1 or value differnt to zero to let the loop in main_shell*/
-	return (1);
-}
 /**
 * shell_exit - exit interactive mode in shell
 * @prg: the initial program that lunch main - example ./shell
@@ -55,7 +27,9 @@ int shell_exit(char *prg, int la,  char **args, char **env, info_cmd **env_t)
 
 	if (la == 1)
 	{
-		cleanup2(la, &args);
+		cleanupArray(la, &args);
+		cleanupList(env_t);
+		cleanupArray(list_len(*env_t), &env);
 		exit(EXIT_DONE);
 	}
 	else if (la >= 2)
@@ -68,7 +42,9 @@ int shell_exit(char *prg, int la,  char **args, char **env, info_cmd **env_t)
 		}
 		else
 		{
-			cleanup2(la, &args);
+			cleanupList(env_t);
+			cleanupArray(la, &args);
+			cleanupArray(list_len(*env_t), &env);
 			exit(num);
 		}
 	}
@@ -88,7 +64,6 @@ int lunch_builtin(char *prg, int la, char  **arg, char **env, info_cmd **env_t)
 	int i = 0, number_of_builtin = 0;
 	int ret = NOT_BUILT_IN;
 	char *names_builtin[] = {
-		"test",
 		"exit",
 		"env",
 		"setenv",
@@ -96,7 +71,6 @@ int lunch_builtin(char *prg, int la, char  **arg, char **env, info_cmd **env_t)
 	};
 
 	int (*b_f[]) (char *prg, int la, char **arg, char **env, info_cmd **env_t) = {
-		&test,
 		&shell_exit,
 		&print_env,
 		&set_env,

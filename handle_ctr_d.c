@@ -41,7 +41,7 @@ int handle_CTRD(size_t *n,  char **input)
 	}
 	else if (err_num == 0 && ((*input)[0] == '\0'))
 	{
-		cleanup3(input, n);
+		cleanupInput(input, n);
 		return (-1);
 	}
 	else
@@ -57,13 +57,13 @@ int handle_CTRD(size_t *n,  char **input)
 				}
 				else
 				{
-					cleanup3(input, n);
+					cleanupInput(input, n);
 					return (-1);
 				}
 			}
 			else
 			{
-				cleanup3(input, n);
+				cleanupInput(input, n);
 				return (-1);
 			}
 		}
