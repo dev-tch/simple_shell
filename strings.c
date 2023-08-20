@@ -127,7 +127,7 @@ char *_strdup(char *str)
 
 /**
  * _strcmp - compare two strings
- *@s1: first string
+ *@s1: the first string
  *@s2: second string
  * Return: int
  */
