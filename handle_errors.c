@@ -44,7 +44,7 @@ return (": Unknown Error");
 }
 /**
 * print_error - display error message on standart error
-* @program: name of shell program
+* @program: the name of shell program
 * @err_code: error code
 * @type_error: (standart error or new defined error)
 * Return: void
