@@ -67,14 +67,16 @@ int lunch_builtin(char *prg, int la, char  **arg, char **env, info_cmd **env_t)
 		"exit",
 		"env",
 		"setenv",
-		"unsetenv"
+		"unsetenv",
+		"cd"
 	};
 
 	int (*b_f[]) (char *prg, int la, char **arg, char **env, info_cmd **env_t) = {
 		&shell_exit,
 		&print_env,
 		&set_env,
-		&unset_env
+		&unset_env,
+		&lsh_cd
 	};
 
 	/*if command empty string with continue interactive mode*/
