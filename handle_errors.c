@@ -93,7 +93,7 @@ void print_error(char *program, int err_code, int type_error)
 /**
 * print_err_plus - display error message on standart error
 * @program: name of shell program
-* @err_code: error code
+* @err_code: the error code
 * @type_error: (standart error or new defined error)
 * @cmd_arg: name of command to excute
 * Return: void
