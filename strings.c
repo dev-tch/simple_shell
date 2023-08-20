@@ -4,7 +4,7 @@
 /* new module for string functions*/
 
 /**
-* _strlen -length of string
+* _strlen - length of string
 * @str: string
 *
 * Return:length of string
