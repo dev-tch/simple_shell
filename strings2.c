@@ -90,7 +90,7 @@ char *split(char *str, char *separators)
 }
 /**
  * _atoi - converts string to integer
- *@s: pointer to char
+ *@s: a pointer to char
  * Return: int
  */
 
