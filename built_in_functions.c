@@ -14,7 +14,7 @@
 * @args: arguments of command
 * @env: environnement variables
 * @env_t: list contains environnements
-* Return: (0 to leave the loop) ( value differnt to zero to continue the loop)
+* Return: (0 to leave the loop) ( values differnt to zero to continue the loop)
 */
 int shell_exit(char *prg, int la,  char **args, char **env, info_cmd **env_t)
 {
