@@ -35,7 +35,7 @@ int _strlen(char *str)
  */
 char *_strcat(char *dest, char *src)
 {
-	/*variables declaration */
+	/*variables declarations */
 	/*int x = 0;*/
 	/*int y = 0;*/
 	char *tmp = NULL;
