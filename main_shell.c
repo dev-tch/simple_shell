@@ -39,12 +39,16 @@ int main(int argc, char *argv[], char **env)
 	{
 		exit(EXIT_FAIL);
 	}
+
 	conv_env_to_list(&list_env, env);
 	while (loop)
 	{
-		if (!display_prompt("($) ", 5))
+		if (isatty(STDIN_FILENO))
 		{
-			exit(EXIT_FAIL);
+			if (!display_prompt("($) ", 5))
+			{
+				exit(EXIT_FAIL);
+			}
 		}
 		read_ok = read_command(program, &user_input, &n);
 		if (read_ok == -1)
