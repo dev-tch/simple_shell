@@ -97,7 +97,7 @@ int lunch_builtin(char *prg, int la, char  **arg, char **env, info_cmd **env_t)
 
 /**
 * is_builtin - check if command is builtin function of shell
-* @name_cmd: command name
+* @name_cmd: the command name
 * Return: (1 ==> builtin function)(0==> non builtin function)
 */
 int is_builtin(char *name_cmd)
