@@ -129,7 +129,7 @@ int is_builtin(char *name_cmd)
 }
 /**
 * print_env - Function to print environment variables and their count.
-* @prg: the initial program that lunch main - example ./shell
+* @prg: the initial program that lunch main - exp ./shell
 * @la: number of arguments in command
 * @arg: arguments of command
 * @env: environnement variables
