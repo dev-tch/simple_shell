@@ -6,7 +6,7 @@
 #include <stdio.h>
 /**
 * get_error_value - return the value error
-* @code: error code
+* @code: the error code
 * Return: value of error
 */
 char *get_error_value(unsigned int  code)
