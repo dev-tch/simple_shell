@@ -158,6 +158,9 @@ LinkedList *inserted_node = NULL;
 token = strtok(user_input, delimiters);
 while (token != NULL)
 {
+	/*test if symbol of comments(#) found*/
+	if (*token == '#')
+		break; /*ignore the rest of command*/
 	if (!is_empty(token))
 	{
 		inserted_node = add_node_end(head, token);
