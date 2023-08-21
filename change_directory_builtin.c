@@ -14,8 +14,7 @@
  * @alia_l: A pointer to a linked list for aliases.
  * @Return: Return an integer status code indicating success or failure.
  */
-int change_dir(char *prg, int la, char **args, char **env,
-LinkedList **env_l, LinkedList **alia_l)
+int change_dir(char *prg, int la, char **args, char **env, LinkedList **env_l, LinkedList **alia_l)
 {
 	/*unused parameters*/
 	(void)prg;
@@ -24,8 +23,6 @@ LinkedList **env_l, LinkedList **alia_l)
 	(void) env;
 	(void)env_l;
 	(void)alia_l;
-
-	return (1);
 }
 
 	char *new_dir;
