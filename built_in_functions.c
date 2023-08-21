@@ -26,9 +26,9 @@ LinkedList **alia_l)
 	if (la == 1)
 	{
 		cleanupArray(la, &args);
-		cleanupList(env_l);
 		cleanupList(alia_l);
 		cleanupArray(list_len(*env_l), &env);
+		cleanupList(env_l);
 		exit(EXIT_DONE);
 	}
 	else if (la >= 2)
@@ -42,9 +42,9 @@ LinkedList **alia_l)
 		else
 		{
 			cleanupList(alia_l);
-			cleanupList(env_l);
 			cleanupArray(la, &args);
 			cleanupArray(list_len(*env_l), &env);
+			cleanupList(env_l);
 			exit(num);
 		}
 	}

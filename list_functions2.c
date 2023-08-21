@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include "list.h"
 #include <stdio.h>
+#include "common.h"
+#include "helper_functions.h"
+#include "strings.h"
 /**
 * delete_first_node - delete node at index 0
 * @head: pointer to the pointer of node
@@ -40,27 +43,37 @@ void conv_env_to_list(LinkedList **list_env, char **env)
 
 /**
 * print_list - print the nodes of list
+* @program: initila shell program
 * @h: pointer to first elment in list (HEAD)
 * Return: number of elmements in list
 */
-int print_list(LinkedList *h)
+void print_list(char *program, LinkedList *h)
 {
-	int nb_nodes = 0;
+	while (h != NULL)
+	{
+		if (h->arg != NULL)
+			printMsgWithNewLine(program, h->arg);
+		h = h->next;
+	} /*while loop*/
+}
+/**
+* get_node_by_prefix - search if info begins with prefix in list
+* @prefix: pattern that h->arg begins
+* @h: linkedlist contains data
+* Return: pointer to h->arg if lookup is ok
+*/
+char *get_node_by_prefix(char *prefix, LinkedList *h)
+{
+	char *value = NULL;
 
 	while (h != NULL)
 	{
-		nb_nodes++;
-		if (h->arg == NULL)
+		if (get_beginsWith(h->arg, prefix) && _strlen(prefix) == h->idx_sep)
 		{
-			printf("[0] (nil)\n");
-		}
-		else
-		{
-			printf("[%d] [%d] %s\n", h->len, h->idx_sep, h->arg);
+			value = (h->arg);
+			break;
 		}
 		h = h->next;
-	} /*while loop*/
-
-	return (nb_nodes);
+	}
+	return (value);
 }
-

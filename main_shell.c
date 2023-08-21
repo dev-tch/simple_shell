@@ -94,7 +94,7 @@ int main(int argc, char *argv[], char **env)
 		cleanupArray(list_len(list_env), &new_env);
 	}
 	cleanupList(&list_env);
-	/*cleanupList(&alia_l);*/
+	cleanupList(&alia_l);
 	return (0);
 }
 /**

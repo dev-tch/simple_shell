@@ -13,7 +13,7 @@ char *get_error_value(unsigned int  code)
 {
 unsigned int i = 0;
 
-static char *err[20];
+static char *err[21];
 /*define errors*/
 err[0]  = ": SUCCESS";
 err[1]  = ": Operation not permitted";
@@ -34,8 +34,9 @@ err[15] = ": Echec reading Line";
 err[16] = ": 1: exit: Illegal number";
 err[17] = ": ILLigal number of arguments";
 err[18] = ": Environnement variable Not found";
-err[19] = ": Unknown Error";
-for (i = 0 ; i < 20 ; i++)
+err[19] = ": alias";
+err[20] = ": Unknown Error";
+for (i = 0 ; i < 21 ; i++)
 {
 if (i == code)
 return (err[i]);
