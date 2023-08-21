@@ -11,4 +11,5 @@ char *_strchr(char *s, char c);
 char *split(char *str, char *separators);
 int _atoi(char *s);
 int get_index_sep(char *str, char sep);
+char *_strncpy(char *dest, char *src, int n);
 #endif

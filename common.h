@@ -11,4 +11,6 @@ int print_env(char *prg, int la, char **arg, char **env, LinkedList **env_l,
 LinkedList **alia_l);
 int doAlias(char *prg, int la,  char **args, char **env, LinkedList **env_l,
 LinkedList **alia_l);
+int change_dir(char *prg, int la, char  **args, char **env,
+LinkedList **env_l, LinkedList **alia_l);
 #endif

@@ -70,11 +70,8 @@ LinkedList **env_l, LinkedList **alia_l)
 		"env",
 		"setenv",
 		"unsetenv",
-<<<<<<< HEAD
-		"cd"
-=======
+		"cd",
 		"alias"
->>>>>>> 727ea0c7503920712601169fef5b04b1d0250c41
 	};
 
 	int (*b_f[]) (char *prg, int la, char **arg, char **env, LinkedList **env_l,
@@ -83,11 +80,8 @@ LinkedList **alia_l) = {
 		&print_env,
 		&set_env,
 		&unset_env,
-<<<<<<< HEAD
-		&lsh_cd
-=======
+		&change_dir,
 		&doAlias
->>>>>>> 727ea0c7503920712601169fef5b04b1d0250c41
 	};
 
 	/*if command empty string with continue interactive mode*/
@@ -122,6 +116,7 @@ int is_builtin(char *name_cmd)
 		"env",
 		"setenv",
 		"unsetenv",
+		"cd",
 		"alias"
 	};
 
