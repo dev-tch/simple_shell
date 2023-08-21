@@ -12,4 +12,5 @@ char *split(char *str, char *separators);
 int _atoi(char *s);
 int get_index_sep(char *str, char sep);
 char *_strncpy(char *dest, char *src, int n);
+char *conv_nb_to_str(int n);
 #endif

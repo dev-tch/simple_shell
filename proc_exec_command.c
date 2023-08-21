@@ -3,18 +3,22 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/wait.h>
+#include <stdio.h>
 /**
 * lunch_shell_execution - handle process child and parrent
 * @prg:  name of program shell
 * @len_args: number of arguments of command
 * @args: arguments of command
 * @env: environnement args
+* @status_code: pointer to status_code exit
 * Return: void
 */
-int lunch_shell_execution(char *prg, int len_args, char **args, char **env)
+int lunch_shell_execution(char *prg, int len_args, char **args, char **env,
+int *status_code)
 {
 	pid_t id_process;
 	int status_process;
+	int status = 0;
 	/*len_args unused */
 	len_args = (len_args == 0 ? 0 : len_args);
 
@@ -40,6 +44,11 @@ else
 	do {
 		waitpid(id_process, &status_process, WUNTRACED);
 	} while (!WIFEXITED(status_process) && !WIFSIGNALED(status_process));
+	if WIFEXITED(status_process)
+	{
+		status = WEXITSTATUS(status_process);
+		*status_code = status;
+	}
 	/*execution process parent*/
 }
 return (1);

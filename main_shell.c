@@ -6,7 +6,8 @@
 #include "cleanup.h"
 
 int  read_command(char *program, char **user_input, size_t *n);
-int  add_args_cmd_to_list(char *program, char *user_input, LinkedList **head);
+int  add_args_cmd_to_list(char *program, char *user_input, LinkedList **head,
+int status_code);
 int  handle_errors(char *program, char *command);
 void handle_path(char *program, char **env, char *name_cmd, LinkedList **head);
 /**
@@ -31,6 +32,7 @@ int main(int argc, char *argv[], char **env)
 	int len_args = 0;
 	char **new_env = NULL;
 	LinkedList *alia_l = NULL;
+	int status_code = 0;
 
 	if (argc >= 0)
 	{
@@ -63,7 +65,7 @@ int main(int argc, char *argv[], char **env)
 		{
 			continue;
 		}
-		i = add_args_cmd_to_list(program, user_input, &head);
+		i = add_args_cmd_to_list(program, user_input, &head, status_code);
 		if (i > 0 && head != NULL)
 		{
 			new_env = list_to_array(list_env);
@@ -82,7 +84,8 @@ int main(int argc, char *argv[], char **env)
 				if (handle_errors(program, args[0]) == 1)
 				{
 					/*lunch the excution of command with process child*/
-					loop = lunch_shell_execution(program, len_args, args, new_env);
+					loop = lunch_shell_execution(program, len_args, args, new_env,
+					       &status_code);
 
 				}
 			}
@@ -146,15 +149,18 @@ int  read_command(char *program, char **user_input, size_t *n)
 * @program: name of shell program
 * @user_input: pointer to input entered by user
 * @head: pointer to pointer to the head node of list
+* @status_code: int status code exit
 * Return: number of nodes added to list
 */
-int add_args_cmd_to_list(char *program, char *user_input, LinkedList **head)
+int add_args_cmd_to_list(char *program, char *user_input, LinkedList **head,
+int status_code)
 {
-int i = 0;
+int i = 0, pid = 0;
 char *delimiters = " \n\r\t";
 char *token = NULL;
 LinkedList *inserted_node = NULL;
-
+char *ptr = NULL;
+pid = getpid();
 token = strtok(user_input, delimiters);
 while (token != NULL)
 {
@@ -163,7 +169,20 @@ while (token != NULL)
 		break; /*ignore the rest of command*/
 	if (!is_empty(token))
 	{
-		inserted_node = add_node_end(head, token);
+		/*handle the symbole $$: The process number of the current shell*/
+		if (_strcmp(token, "$$") == 0)
+		{
+			ptr = conv_nb_to_str(pid);
+			inserted_node = add_node_end(head, ptr);
+		}
+		else if (_strcmp(token, "$?") == 0)
+		{
+			ptr = conv_nb_to_str(status_code);
+			inserted_node = add_node_end(head, ptr);
+		}
+		else
+			inserted_node = add_node_end(head, token);
+
 		if (inserted_node == NULL)
 		{
 			print_error(program, MALLOC_ERROR, NEW_ERROR);
