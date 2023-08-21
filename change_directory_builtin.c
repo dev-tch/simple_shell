@@ -24,7 +24,6 @@ LinkedList **env_l, LinkedList **alia_l)
 	(void) env;
 	(void)env_l;
 	(void)alia_l;
-
 	if (la == 1)
 		new_dir = getenv("HOME"); /*No argument provided, change to $HOME*/
 	else if (strcmp(args[1], "-") == 0)
