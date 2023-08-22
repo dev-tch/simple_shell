@@ -54,7 +54,7 @@ int main(int argc, char *argv[], char **env)
 	{
 		if (isatty(STDIN_FILENO))
 		{
-			if (!display_prompt("^-^ ", 4)) /*test 4*/
+			if (!display_prompt("($) ", 4)) /*test 7*/
 			{
 				exit(EXIT_FAIL);
 			}
