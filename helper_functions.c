@@ -2,7 +2,9 @@
 #include "errors.h"
 #include "list.h"
 #include <string.h>
+#include "strings.h"
 #include <stdio.h>
+#include "common.h"
 /**************** methode to write message with new line */
 
 /**
@@ -72,11 +74,29 @@ void print_error_alias(char *program, char *input_data)
 */
 int save_commands(LinkedList **cmds, char *input)
 {
-	const char sep = ';';
-	char *token = 0;
+	const char sep  = ';';
+	const char dash = '#';
+
+	char *token     = NULL;
+
 	int i = 0;
 
-	token  = strtok(input, &sep);
+	if (input == NULL || *input == '\0' || *input == dash)
+	{
+		return (0);
+	}
+
+	if (is_empty(input))
+	{
+		return (0);
+	}
+
+	if (_strchr(input, dash) != 0)
+	{
+		input  = strtok(input, &dash);
+	}
+
+	token = strtok(input, &sep);
 
 	while (token != NULL)
 	{
