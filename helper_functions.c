@@ -90,12 +90,13 @@ int save_commands(LinkedList **cmds, char *input)
 	{
 		return (0);
 	}
-
+	/* bloc of code to analyse valgrind problem*/
+	/*
 	if (_strchr(input, dash) != 0)
 	{
 		input  = strtok(input, &dash);
 	}
-
+	*/
 	token = strtok(input, &sep);
 
 	while (token != NULL)
