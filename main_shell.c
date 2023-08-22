@@ -80,7 +80,7 @@ int main(int argc, char *argv[], char **env)
 			if (i > 0 && head != NULL)
 			{
 				new_env = list_to_array(list_env);
-				handle_path(program, new_env, head->arg, &head);
+				/*handle_path(program, new_env, head->arg, &head);*/   /*comment1 for test*/
 				args = list_to_array(head);
 				len_args = list_len(head);
 				if (_strcmp(args[0], "exit") == 0)
