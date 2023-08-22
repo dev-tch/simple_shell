@@ -4,7 +4,7 @@
 #include "list.h"
 #include "errors.h"
 #include "cleanup.h"
-
+#include "helper_functions.h"
 int  read_command(char *program, char **user_input, size_t *n);
 int  add_args_cmd_to_list(char *program, char *user_input, LinkedList **head,
 int status_code);
@@ -32,6 +32,10 @@ int main(int argc, char *argv[], char **env)
 	int len_args = 0;
 	char **new_env = NULL;
 	LinkedList *alia_l = NULL;
+	LinkedList *cmds   = NULL;
+	int ret = 0;
+	LinkedList *temp = NULL;
+
 	int status_code = 0;
 
 	if (argc >= 0)
@@ -65,36 +69,52 @@ int main(int argc, char *argv[], char **env)
 		{
 			continue;
 		}
-		i = add_args_cmd_to_list(program, user_input, &head, status_code);
-		if (i > 0 && head != NULL)
-		{
-			new_env = list_to_array(list_env);
-			handle_path(program, new_env, head->arg, &head);
-			args = list_to_array(head);
-			len_args = list_len(head);
-			if (_strcmp(args[0], "exit") == 0)
-			{
-				cleanupInput(&user_input, &n);
-				cleanupList(&head);
-			}
-			/*test if  builtin function of shell*/
-			loop = lunch_builtin(program, len_args,  args, new_env, &list_env, &alia_l);
-			if (loop  == NOT_BUILT_IN)
-			{
-				if (handle_errors(program, args[0]) == 1)
-				{
-					/*lunch the excution of command with process child*/
-					loop = lunch_shell_execution(program, len_args, args, new_env,
-					       &status_code);
+		/*function to save multiple commands seperated with symbol (;)*/
+		ret = save_commands(&cmds, user_input);
 
+		temp = cmds;
+		/*execute every command in list cmds*/
+		while (ret >= 0 && temp != NULL)
+		{
+			i = add_args_cmd_to_list(program, temp->arg, &head, status_code);
+			if (i > 0 && head != NULL)
+			{
+				new_env = list_to_array(list_env);
+				handle_path(program, new_env, head->arg, &head);
+				args = list_to_array(head);
+				len_args = list_len(head);
+				if (_strcmp(args[0], "exit") == 0)
+				{
+					cleanupInput(&user_input, &n);
+					cleanupList(&head);
+				}
+				/*test if  builtin function of shell*/
+				loop = lunch_builtin(program, len_args,  args, new_env, &list_env,
+					&alia_l);
+				if (loop  == NOT_BUILT_IN)
+				{
+					if (handle_errors(program, args[0]) == 1)
+					{
+						/*lunch the excution of command with process child*/
+						loop = lunch_shell_execution(program, len_args, args, new_env,
+						&status_code);
+
+					}
 				}
 			}
+
+			/*after each process of command*/
+			/*cleanup(&user_input, &head, len_args, &args);*/
+			/*cleanupInput(&user_input, &n);*/
+			cleanupList(&head);
+			cleanupArray(list_len(list_env), &new_env);
+			ret--;
+			temp = temp->next;
 		}
-		/*after each process of command*/
-		/*cleanup(&user_input, &head, len_args, &args);*/
+
+		/*after finish the excution of list command */
 		cleanupInput(&user_input, &n);
-		cleanupList(&head);
-		cleanupArray(list_len(list_env), &new_env);
+		cleanupList(&cmds);
 	}
 	cleanupList(&list_env);
 	cleanupList(&alia_l);

@@ -1,5 +1,8 @@
 #include "strings.h"
 #include "errors.h"
+#include "list.h"
+#include <string.h>
+#include <stdio.h>
 /**************** methode to write message with new line */
 
 /**
@@ -59,4 +62,27 @@ void print_error_alias(char *program, char *input_data)
 	print_err_plus(program, ALIAS_NOT_FOUND, NEW_ERROR, dest);
 	free(dest);
 	dest = NULL;
+}
+
+/**
+* save_commands - save multiple commands in linkedlist
+* @cmds: list that contains commands
+* @input: string of commands sepreated by (;)
+* Return: number of commands
+*/
+int save_commands(LinkedList **cmds, char *input)
+{
+	const char sep = ';';
+	char *token = 0;
+	int i = 0;
+
+	token  = strtok(input, &sep);
+
+	while (token != NULL)
+	{
+		add_node_end(cmds, token);
+		i++;
+		token = strtok(NULL, &sep);
+	}
+	return (i);
 }
