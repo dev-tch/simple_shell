@@ -115,7 +115,7 @@ void print_err_plus(char *program, int err_code, int type_error, char *cmd_arg)
 	if (err_num != 0 && type_error == STD_ERROR && program != NULL)
 	{
 		perror(program);
-		errno = 0;
+		/*errno = 0;*/
 		return;
 	}
 	err_value = get_error_value(err_code);
@@ -123,7 +123,7 @@ void print_err_plus(char *program, int err_code, int type_error, char *cmd_arg)
 
 	if (type_error == NEW_ERROR && is_ok)
 	{
-		errno = 0;
+		/*errno = 0;*/
 		/*a new defined error*/
 		size = _strlen(program)  + _strlen(err_value) + _strlen(cmd_arg);
 		size2 = _strlen(empty_err) + _strlen(new_line);
