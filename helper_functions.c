@@ -9,7 +9,7 @@
 
 /**
 * printMsgWithNewLine - print msg with jump to new line
-* @program: initial program that lunch shell
+* @program: the initial program that lunch shell
 * @msg: message to print in stdout
 * Return: void
 */
