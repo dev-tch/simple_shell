@@ -1,3 +1,3 @@
-0x16. C - Simple Shell
+Simple Shell
 Team Project new Shell (imane & tijani) 
-first tasks simple shell 
+first tasks simple shell (c) 

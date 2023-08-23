@@ -1,8 +1,8 @@
 #include <stddef.h>
 /**
 * get_index_sep - get the index of seperator that exist in string
-* @sep: seperator
-* @str: String
+* @sep: a seperator
+* @str: a string
 * Return: index
 **/
 int get_index_sep(char *str, char sep)
@@ -25,10 +25,10 @@ int get_index_sep(char *str, char sep)
 }
 
 /**
- * _strncpy - copy n elments from string src to dest
+ * _strncpy - copy an elments from string src to dest
  * @dest: copy to
  * @src: copy from
- * @n: max number of copied characters(exclusive)
+ * @n: the max number of copied characters(exclusive)
  * Return: the copied string
  */
 char *_strncpy(char *dest, char *src, int n)

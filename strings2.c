@@ -2,7 +2,7 @@
 #include <string.h>
 /**
 * is_space - check character space
-* @c: character
+* @c: a character
 * Return: (1 or 0)
 */
 
@@ -12,7 +12,7 @@ return (c == ' ' || c == '\t' || c == '\r');
 }
 /**
 * is_empty - check empty string
-* @str: sring
+* @str: a string
 * Return: (1 or 0)
 */
 

@@ -10,7 +10,7 @@
 /**
 * get_beginsWith - search pattern in string and return index
 * @src: string to apply the search in it
-* @pattern: string pattern used for serach
+* @pattern: a string pattern used for serach
 * Return: (0 ==> not found)(or index )
 */
 int get_beginsWith(char *src, char *pattern)
