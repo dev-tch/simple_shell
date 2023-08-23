@@ -10,7 +10,7 @@ void alias_action(char *prg, int id_sep, char *alias_var, LinkedList **alia_l);
 /**
 * doAlias - a handle alias of shell
 * @prg: the initial program
-* @la: length of arguments
+* @la: a length of arguments
 * @args: arguments
 * @env: double pointer contains envs
 * @env_l: list contains envs
