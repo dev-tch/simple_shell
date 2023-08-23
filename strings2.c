@@ -12,7 +12,7 @@ return (c == ' ' || c == '\t' || c == '\r');
 }
 /**
 * is_empty - check empty string
-* @str: sring
+* @str: a string
 * Return: (1 or 0)
 */
 
