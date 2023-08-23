@@ -104,7 +104,7 @@ LinkedList **alia_l) = {
 
 /**
 * is_builtin - check if command is builtin function of shell
-* @name_cmd: the command name
+* @name_cmd: command name
 * Return: (1 ==> builtin function)(0==> non builtin function)
 */
 int is_builtin(char *name_cmd)
