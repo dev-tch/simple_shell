@@ -8,7 +8,7 @@
 #include "strings.h"
 /**
 * delete_first_node - delete node at index 0
-* @head: pointer to the pointer of node
+* @head: a pointer to the pointer of node
 * Return: 1(succeeded) , -1(failed)
 */
 int delete_first_node(LinkedList **head)
