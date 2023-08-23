@@ -74,14 +74,12 @@ void print_error_alias(char *program, char *input_data)
 */
 int save_commands(LinkedList **cmds, char *input)
 {
-	const char sep  = ';';
-	const char dash = '#';
+	int idx = 0;
+	char *token;
 
-	char *token     = NULL;
+	int i = 0, j = 0;
 
-	int i = 0;
-
-	if (input == NULL || *input == '\0' || *input == dash)
+	if (input == NULL)
 	{
 		return (0);
 	}
@@ -90,19 +88,30 @@ int save_commands(LinkedList **cmds, char *input)
 	{
 		return (0);
 	}
-
-	if (_strchr(input, dash) != 0)
+	 /*bloc of code to analyse valgrind problem*/
+	if (*input == '#')
 	{
-		input  = strtok(input, &dash);
+		return (0);
 	}
-
-	token = strtok(input, &sep);
+	while (input[j] !=  '\0')
+	{
+		idx = (input[j] == '#');
+		if (idx == 1)
+			break;
+		j++;
+	}
+	if (idx == 1)
+	{
+		input  = strtok(input, "#");
+	}
+	token = strtok(input, ";");
 
 	while (token != NULL)
 	{
 		add_node_end(cmds, token);
 		i++;
-		token = strtok(NULL, &sep);
+		token = strtok(NULL, ";");
 	}
+
 	return (i);
 }
