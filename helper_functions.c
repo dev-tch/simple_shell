@@ -30,15 +30,15 @@ void printMsgWithNewLine(char *program, char *msg)
 		{
 			_strcpy(dest, msg);
 			_strcat(dest, new_line);
+			write(fd, dest, _strlen(dest));
+			free(dest);
+			dest = NULL;
 		}
 		else
 		{
 			free(dest);
 			dest = NULL;
 		}
-		write(fd, dest, len_msg + 1);
-		free(dest);
-		dest = NULL;
 	}
 	else
 	{
