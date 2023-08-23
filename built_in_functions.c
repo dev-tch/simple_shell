@@ -142,7 +142,7 @@ int is_builtin(char *name_cmd)
 * @la: number of arguments in command
 * @arg: arguments of command
 * @env: environnement variables
-* @env_l: a list contains environnemnts
+* @env_l: list contains environnemnts
 * @alia_l: list contains alias
 * Return: Number of environment variables, or 0 on error.
 */
