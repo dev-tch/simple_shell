@@ -2,7 +2,7 @@
 /**
 * get_index_sep - get the index of seperator that exist in string
 * @sep: seperator
-* @str: String
+* @str: a string
 * Return: index
 **/
 int get_index_sep(char *str, char sep)
