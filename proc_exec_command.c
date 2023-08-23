@@ -10,7 +10,7 @@
 * @len_args: number of arguments of command
 * @args: arguments of command
 * @env: the environnement args
-* @status_code: pointer to status_code exit
+* @status_code: a pointer to status_code exit
 * Return: void
 */
 int lunch_shell_execution(char *prg, int len_args, char **args, char **env,
