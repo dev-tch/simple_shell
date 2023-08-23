@@ -13,7 +13,7 @@
 int display_prompt(char *str, int size);
 int lunch_shell_execution(char *prg, int len_args, char **args, char **env,
 int *status_code);
-int clear_eof(FILE *stream, size_t len);
+/*int clear_eof(FILE *stream, size_t len);*/ /*test 11*/
 int handle_CTRD(size_t *n,  char **user_input);
 int shell_exit(char *prg, int la, char **arg, char **env,
 LinkedList **env_t, LinkedList **alia_l);

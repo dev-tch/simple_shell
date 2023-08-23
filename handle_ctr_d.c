@@ -5,25 +5,7 @@
 #include <stdio.h>
 #include "cleanup.h"
 
-/**
-* clear_eof - clear EOF from stdin
-* @stream: stdin stream File
-* @len: a lenght of command enterd to stdin
-* Return: void
-*/
-int  clear_eof(FILE *stream, size_t len)
-{
-	char buf_tst_eof[10];
-	int fd_stdin = 0, rd = 0;
-
-	rd = read(fd_stdin, buf_tst_eof, len);
-	if (rd == 0)
-	{
-		((stream)->_flags &= ~(_IO_ERR_SEEN | _IO_EOF_SEEN));
-		return (1);
-	}
-	return (0);
-}
+/*clear_eof deleted  - test 11*/
 /**
 * handle_CTRD - handle key ctr+d in shell
 * @n: the adress of the variable that holds the input buffer
@@ -52,15 +34,8 @@ int handle_CTRD(size_t *n,  char **input)
 		{
 			if (!is_empty(*input))
 			{
-				if (clear_eof(stdin, len))
-				{
-					return (1);
-				}
-				else
-				{
-					cleanupInput(input, n);
-					return (-1);
-				}
+				/*return (1);*/
+				return (-1);
 			}
 			else
 			{
