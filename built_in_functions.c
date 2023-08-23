@@ -22,7 +22,7 @@ LinkedList **alia_l)
 {
 	int num = 0;
 
-	/* declare parameters as unused*/
+	/* declare parameters unused*/
 	if (la == 1)
 	{
 		cleanupArray(la, &args);
