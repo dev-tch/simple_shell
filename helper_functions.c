@@ -5,7 +5,7 @@
 #include "strings.h"
 #include <stdio.h>
 #include "common.h"
-/**************** methode to write message with new line */
+/**************** methode to write a message with new line */
 
 /**
 * printMsgWithNewLine - print msg with jump to new line
