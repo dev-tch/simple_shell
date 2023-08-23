@@ -66,7 +66,7 @@ void print_error(char *program, int err_code, int type_error)
 	if (err_num != 0 && type_error == STD_ERROR && program != NULL)
 	{
 		perror(program);
-		errno = 0;
+		/*errno = 0;*/
 		return;
 	}
 
@@ -75,7 +75,7 @@ void print_error(char *program, int err_code, int type_error)
 
 	if (type_error == NEW_ERROR  && is_ok)
 	{
-		errno = 0;
+		/*errno = 0;*/
 		/*new defined error*/
 		size = _strlen(program) + _strlen(err_value) + 1 + 1;
 		dest = (char *) malloc(size);
