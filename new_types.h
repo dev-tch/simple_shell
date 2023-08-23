@@ -6,7 +6,7 @@ typedef struct list_data_shell  LinkedList;
  * struct list_data_shell - list to handle shell data : envs, cmds, alias ...
  * @arg: data of each node
  * @len: length of data
- * @idx_sep:  index of character  '=' in data (for case alias)
+ * @idx_sep: the index of character  '=' in data (for case alias)
  * @next: next node adress
  *
  * Description: helper list to hold data for processing shell commands
