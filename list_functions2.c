@@ -28,7 +28,7 @@ int delete_first_node(LinkedList **head)
 }
 /**
 * conv_env_to_list -  convert array env to list
-* @list_env: pointer to pointer of head list
+* @list_env: a pointer to pointer of head list
 * @env: double pointer contains environnements
 * Return: void
 */
