@@ -25,7 +25,7 @@ int get_index_sep(char *str, char sep)
 }
 
 /**
- * _strncpy - copy n elments from string src to dest
+ * _strncpy - copy an elments from string src to dest
  * @dest: copy to
  * @src: copy from
  * @n: the max number of copied characters(exclusive)
