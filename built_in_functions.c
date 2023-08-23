@@ -57,7 +57,7 @@ LinkedList **alia_l)
 * @arg: arguments of command
 * @env: environnement variables
 * @env_l: list contains environnements
-* @alia_l: list contains alias
+* @alia_l: a ilist contains alias
 * Return: (0 to leave the loop) ( value differnt to zero to continue the loop)
 */
 int lunch_builtin(char *prg, int la, char  **arg, char **env,
