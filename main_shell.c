@@ -98,6 +98,7 @@ int main(int argc, char *argv[], char **env)
 				{
 					cleanupInput(&user_input, &n);
 					cleanupList(&head);
+					cleanupList(&cmds); /*fix valgrind memory leaks */
 				}
 				/*test if  builtin function of shell*/
 				loop = lunch_builtin(program, len_args,  args, new_env, &list_env,
