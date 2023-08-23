@@ -8,7 +8,7 @@
 #include <stdio.h>
 /**
 * var_exist - check is variable found in environnement
-* @var_name: name of variable
+* @var_name: the name of variable
 * @var_value: content of variable
 * @env_t: list contains environnments
 * Return: (0 variable not found) ( 1 variable exist)
