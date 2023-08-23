@@ -2,7 +2,7 @@
 #include <string.h>
 /**
 * is_space - check character space
-* @c: character
+* @c: a character
 * Return: (1 or 0)
 */
 
