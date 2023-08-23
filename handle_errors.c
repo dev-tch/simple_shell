@@ -66,6 +66,7 @@ void print_error(char *program, int err_code, int type_error)
 	if (err_num != 0 && type_error == STD_ERROR && program != NULL)
 	{
 		perror(program);
+		errno = 0;
 		return;
 	}
 
@@ -74,6 +75,7 @@ void print_error(char *program, int err_code, int type_error)
 
 	if (type_error == NEW_ERROR  && is_ok)
 	{
+		errno = 0;
 		/*new defined error*/
 		size = _strlen(program) + _strlen(err_value) + 1 + 1;
 		dest = (char *) malloc(size);
@@ -102,7 +104,7 @@ void print_err_plus(char *program, int err_code, int type_error, char *cmd_arg)
 	int err_num = 0;
 	char *dest  = NULL;
 	char *err_value = NULL;
-	int size = 0;
+	int size = 0, size2 = 0;
 	char *empty_err = ": ";
 	char *new_line  = "\n";
 	int fd = 2; /*file descriptor for stderr*/
@@ -121,10 +123,11 @@ void print_err_plus(char *program, int err_code, int type_error, char *cmd_arg)
 
 	if (type_error == NEW_ERROR && is_ok)
 	{
-		/*a new defined error*/
 		errno = 0;
-		size = _strlen(program)  + _strlen(err_value) + _strlen(cmd_arg) + 4;
-		dest = (char *) malloc(sizeof(char) * size);
+		/*a new defined error*/
+		size = _strlen(program)  + _strlen(err_value) + _strlen(cmd_arg);
+		size2 = _strlen(empty_err) + _strlen(new_line);
+		dest = (char *) malloc((size + size2 + 1));
 		if (dest != NULL)
 		{
 			/*_strcat(dest, program);*/
@@ -133,7 +136,7 @@ void print_err_plus(char *program, int err_code, int type_error, char *cmd_arg)
 			_strcat(dest, empty_err);
 			_strcat(dest, cmd_arg);
 			_strcat(dest, new_line);
-			write(fd, dest, size);
+			write(fd, dest, (size + size2));
 			free(dest);
 			dest = NULL;
 		}

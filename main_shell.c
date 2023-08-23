@@ -99,6 +99,7 @@ int main(int argc, char *argv[], char **env)
 					cleanupInput(&user_input, &n);
 					cleanupList(&head);
 					cleanupList(&cmds); /*fix valgrind memory leaks */
+					temp = NULL;
 				}
 				/*test if  builtin function of shell*/
 				loop = lunch_builtin(program, len_args,  args, new_env, &list_env,
@@ -117,11 +118,12 @@ int main(int argc, char *argv[], char **env)
 			/*after each process of command*/
 			/*cleanup(&user_input, &head, len_args, &args);*/
 			/*cleanupInput(&user_input, &n);*/
-			cleanupArray(list_len(head), &args);
+			cleanupArray(len_args, &args);
 			cleanupList(&head);
 			cleanupArray(list_len(list_env), &new_env);
-			ret--;
+			if (temp != NULL)
 			temp = temp->next;
+			ret--;
 			i = 0;
 		}
 
@@ -252,7 +254,8 @@ int handle_errors(char *program, char *command)
 	/*check if  file exist*/
 	err = stat(command, &st);
 	if (err == -1)
-	{       print_error(program, errno, STD_ERROR);
+	{
+		print_error(program, errno, STD_ERROR);
 		return (0);
 	}
 
@@ -305,5 +308,7 @@ void  handle_path(char *program, char **env, char *name_cmd, LinkedList **head)
 			if (var_path != NULL)
 				free(var_path);
 		}
+		cleanupList(&head_path);
 	}
 }
+
