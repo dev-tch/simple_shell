@@ -153,13 +153,11 @@ char *lookup_in_path(char *name_cmd, LinkedList *head_path)
 		file_ok = stat(fold_file, &st);
 		if (file_ok != 0)
 		{
-			errno = 0;
 			continue;
 		}
 		exec_ok = access(fold_file, X_OK);
 		if (exec_ok != 0)
 		{
-			errno = 0;
 			continue;
 		}
 		{
