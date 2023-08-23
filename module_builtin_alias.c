@@ -14,7 +14,7 @@ void alias_action(char *prg, int id_sep, char *alias_var, LinkedList **alia_l);
 * @args: the arguments
 * @env: a double pointer contains envs
 * @env_l: a list contains envs
-* @alia_l: list contains alias
+* @alia_l: a list contains alias
 * Return: (no more loop) (1 continue the loop) (-1 break the loop)
 */
 int doAlias(char *prg, int la,  char **args, char **env, LinkedList **env_l,
