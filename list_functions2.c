@@ -21,6 +21,8 @@ int delete_first_node(LinkedList **head)
 		return (-1);
 	temp = *head;
 	*head = (*head)->next;
+	free(temp->arg);  /*fix valgrind memory leaks */
+	temp->arg = NULL;
 	free(temp);
 	return (1);
 }

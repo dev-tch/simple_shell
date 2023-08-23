@@ -84,7 +84,8 @@ int main(int argc, char *argv[], char **env)
 
 		temp = cmds;
 		/*execute every command in list cmds*/
-		while (ret >= 0 && temp != NULL)
+		i = 0;
+		while (ret > 0 && temp != NULL)
 		{
 			i = add_args_cmd_to_list(program, temp->arg, &head, status_code);
 			if (i > 0 && head != NULL)
@@ -112,7 +113,6 @@ int main(int argc, char *argv[], char **env)
 					}
 				}
 			}
-
 			/*after each process of command*/
 			/*cleanup(&user_input, &head, len_args, &args);*/
 			/*cleanupInput(&user_input, &n);*/
@@ -121,6 +121,7 @@ int main(int argc, char *argv[], char **env)
 			cleanupArray(list_len(list_env), &new_env);
 			ret--;
 			temp = temp->next;
+			i = 0;
 		}
 
 		/*after finish the excution of list command */
@@ -201,10 +202,8 @@ int add_args_cmd_to_list(char *program, char *user_input, LinkedList **head,
 int status_code)
 {
 int i = 0, pid = 0;
-char *delimiters = " \n\r\t";
-char *token = NULL;
+char *delimiters = " \n\r\t", *token = NULL, *ptr  = NULL;
 LinkedList *inserted_node = NULL;
-char *ptr = NULL;
 pid = getpid();
 token = strtok(user_input, delimiters);
 while (token != NULL)
@@ -215,29 +214,27 @@ while (token != NULL)
 	if (!is_empty(token))
 	{
 		/*handle the symbole $$: The process number of the current shell*/
-		if (_strcmp(token, "$$") == 0)
+		if (_strcmp(token, "$$") == 0 || _strcmp(token, "$?") == 0)
 		{
-			ptr = conv_nb_to_str(pid);
-			inserted_node = add_node_end(head, ptr);
-		}
-		else if (_strcmp(token, "$?") == 0)
-		{
-			ptr = conv_nb_to_str(status_code);
-			inserted_node = add_node_end(head, ptr);
+		ptr = (token[1] == '?') ?  conv_nb_to_str(status_code) : conv_nb_to_str(pid);
+		inserted_node = add_node_end(head, ptr);
+		free(ptr);
+		i++;
 		}
 		else
+		{
 			inserted_node = add_node_end(head, token);
-
+			i++;
+		}
 		if (inserted_node == NULL)
 		{
 			print_error(program, MALLOC_ERROR, NEW_ERROR);
 			break;
 		}
-		i++;
 	}
 	token = strtok(NULL, delimiters);
 }
-return (i);
+	return (i);
 }
 /**
 * handle_errors - check if command is valid
@@ -303,7 +300,8 @@ void  handle_path(char *program, char **env, char *name_cmd, LinkedList **head)
 				return;
 			add_node_first(head, var_path);
 			if (head_path != NULL)
-				free_list(head_path);
+				/*free_list(head_path);*/
+				cleanupList(&head_path);
 			if (var_path != NULL)
 				free(var_path);
 		}
