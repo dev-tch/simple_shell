@@ -205,6 +205,7 @@ int status_code)
 int i = 0, pid = 0;
 char *delimiters = " \n\r\t", *token = NULL, *ptr  = NULL;
 LinkedList *inserted_node = NULL;
+int test = 0;
 pid = getpid();
 token = strtok(user_input, delimiters);
 while (token != NULL)
@@ -217,9 +218,9 @@ while (token != NULL)
 		/*handle the symbole $$: The process number of the current shell*/
 		if (_strcmp(token, "$$") == 0 || _strcmp(token, "$?") == 0)
 		{
-		ptr = (token[1] == '?') ?  conv_nb_to_str(status_code) : conv_nb_to_str(pid);
+		test = token[1] == '?';
+		ptr = (test) ? conv_nb_to_str(status_code) : conv_nb_to_str(pid);
 		inserted_node = add_node_end(head, ptr);
-		free(ptr);
 		i++;
 		}
 		else
