@@ -1,5 +1,4 @@
 #include "main_shell.h"
-#include <stdio.h>
 #include "strings.h"
 #include "list.h"
 #include "errors.h"
@@ -54,7 +53,7 @@ int main(int argc, char *argv[], char **env)
 	{
 		if (isatty(STDIN_FILENO))
 		{
-			if (!display_prompt("($) ", 4)) /*test 9*/
+			if (!display_prompt("$ ", 2)) /*test 10*/
 			{
 				exit(EXIT_FAIL);
 			}
@@ -62,6 +61,15 @@ int main(int argc, char *argv[], char **env)
 		read_ok = read_command(program, &user_input, &n);
 		if (read_ok == -1)
 		{
+			/*first clean up*/
+			cleanupInput(&user_input, &n);
+			cleanupList(&cmds);
+			cleanupArray(list_len(list_env), &new_env);
+			cleanupList(&list_env);
+			cleanupList(&alia_l);
+			cleanupArray(list_len(head), &args);
+			cleanupList(&head);
+
 			display_prompt("\n", 1);
 			break;
 		}
@@ -116,6 +124,13 @@ int main(int argc, char *argv[], char **env)
 		cleanupInput(&user_input, &n);
 		cleanupList(&cmds);
 	}
+	/* cleanup after while */
+
+	cleanupInput(&user_input, &n);
+	cleanupList(&cmds);
+	cleanupArray(list_len(list_env), &new_env);
+	cleanupArray(list_len(head), &args);
+	cleanupList(&head);
 	cleanupList(&list_env);
 	cleanupList(&alia_l);
 	return (0);
