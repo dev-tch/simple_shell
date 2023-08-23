@@ -1,7 +1,7 @@
 #include <stddef.h>
 /**
 * get_index_sep - get the index of seperator that exist in string
-* @sep: seperator
+* @sep: a seperator
 * @str: a string
 * Return: index
 **/
