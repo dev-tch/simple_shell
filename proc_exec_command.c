@@ -6,11 +6,11 @@
 #include <stdio.h>
 /**
 * lunch_shell_execution - handle process child and parrent
-* @prg:  name of program shell
+* @prg: a name of program shell
 * @len_args: number of arguments of command
 * @args: arguments of command
-* @env: environnement args
-* @status_code: pointer to status_code exit
+* @env: the environnement args
+* @status_code: a pointer to status_code exit
 * Return: void
 */
 int lunch_shell_execution(char *prg, int len_args, char **args, char **env,
