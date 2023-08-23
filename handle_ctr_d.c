@@ -8,7 +8,7 @@
 /*clear_eof deleted  - test 11*/
 /**
 * handle_CTRD - handle key ctr+d in shell
-* @n: the adress of the variable that holds the input buffer
+* @n: adress of the variable that holds the input buffer
 * @input: the typed string in shell
 * Return: (-1:  break the loop)(1: continue the loop)(2: other task to do)
 */
