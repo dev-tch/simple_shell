@@ -4,7 +4,7 @@
 #include "list.h"
 #include "stdlib.h"
 #include "helper_functions.h"
-
+#include <stdio.h>
 void alias_action(char *prg, int id_sep, char *alias_var, LinkedList **alia_l);
 
 /**
@@ -101,8 +101,8 @@ void alias_action(char *prg, int id_sep, char *alias_data, LinkedList **alia_l)
 		value = get_node_by_prefix(alias_data, *alia_l);
 		if (value != NULL)
 			printMsgWithNewLine(prg, value);
-		else
-			print_error_alias(prg, alias_data);
+		/*else*/
+		/*print_error_alias(prg, alias_data);*/ /*test not printing error*/
 	}
 	else
 	{
