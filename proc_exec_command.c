@@ -9,7 +9,7 @@
 * @prg: a name of program shell
 * @len_args: number of arguments of command
 * @args: arguments of command
-* @env: environnement args
+* @env: the environnement args
 * @status_code: pointer to status_code exit
 * Return: void
 */
