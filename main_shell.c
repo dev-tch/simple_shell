@@ -4,7 +4,8 @@
 #include "errors.h"
 #include "cleanup.h"
 #include "helper_functions.h"
-int  read_command(char *program, char **user_input, size_t *n);
+
+int  read_command(char *program, char  **user_input, size_t *n);
 int  add_args_cmd_to_list(char *program, char *user_input, LinkedList **head,
 int status_code);
 int  handle_errors(char *program, char *command);
@@ -34,7 +35,6 @@ int main(int argc, char *argv[], char **env)
 	LinkedList *cmds   = NULL;
 	int ret = 0;
 	LinkedList *temp = NULL;
-
 	int status_code = 0;
 
 	if (argc >= 0)
@@ -48,31 +48,33 @@ int main(int argc, char *argv[], char **env)
 
 	/*gloable List ==> contains environnements variables of shell*/
 	conv_env_to_list(&list_env, env);
-
 	while (loop)
 	{
+		if (read_ok == -1 || read_ok == -2)
+		{
+			if (isatty(STDIN_FILENO))
+			{
+				display_prompt("\n", 1);
+			}
+			break;
+		}
 		if (isatty(STDIN_FILENO))
 		{
 			if (!display_prompt("$ ", 2)) /*test 10*/
 			{
+				cleanupInput(&user_input, &n);
+				cleanupList(&cmds);
+				cleanupArray(list_len(list_env), &new_env);
+				cleanupList(&list_env);
+				cleanupList(&alia_l);
+				cleanupArray(list_len(head), &args);
+				cleanupList(&head);
 				exit(EXIT_FAIL);
 			}
 		}
-		read_ok = read_command(program, &user_input, &n);
-		if (read_ok == -1)
-		{
-			/*first clean up*/
-			cleanupInput(&user_input, &n);
-			cleanupList(&cmds);
-			cleanupArray(list_len(list_env), &new_env);
-			cleanupList(&list_env);
-			cleanupList(&alia_l);
-			cleanupArray(list_len(head), &args);
-			cleanupList(&head);
 
-			display_prompt("\n", 1);
-			break;
-		}
+		cleanupInput(&user_input, &n);
+		read_ok = read_command(program, &user_input, &n);
 		if (!read_ok)
 		{
 			continue;
@@ -114,6 +116,7 @@ int main(int argc, char *argv[], char **env)
 			/*after each process of command*/
 			/*cleanup(&user_input, &head, len_args, &args);*/
 			/*cleanupInput(&user_input, &n);*/
+			cleanupArray(list_len(head), &args);
 			cleanupList(&head);
 			cleanupArray(list_len(list_env), &new_env);
 			ret--;
@@ -125,7 +128,6 @@ int main(int argc, char *argv[], char **env)
 		cleanupList(&cmds);
 	}
 	/* cleanup after while */
-
 	cleanupInput(&user_input, &n);
 	cleanupList(&cmds);
 	cleanupArray(list_len(list_env), &new_env);
@@ -142,40 +144,48 @@ int main(int argc, char *argv[], char **env)
 * @n: address of variable that holds the size of input buffer
 * Return: (0: next loop iteration) (-1: break loop )(1: continue task)
 */
-int  read_command(char *program, char **user_input, size_t *n)
+int read_command(char *program, char **user_input, size_t *n)
 {
-	/** local variables declaration  */
-	ssize_t nb_bytes = 0;
-	int ret = 1;
+	ssize_t nb_bytes = getline(user_input, n, stdin);
+	int err_num = 0;
+	size_t len = 0;
 
-	nb_bytes = getline(user_input, n, stdin);
-	ret = handle_CTRD(n, user_input);
-	if (ret != 2)
+	err_num = errno;
+
+	if (nb_bytes == -1)
 	{
-		return (ret);
+		if (err_num != 0 && err_num != 25)
+		{
+			print_error(program, err_num, STD_ERROR);
+			exit(EXIT_FAIL);
+		}
+		else if (err_num == 0 || err_num == 25)
+		{
+			cleanupInput(user_input, n);
+			return (-2);
+		}
 	}
-	if (nb_bytes == -1 && (errno != 0 && errno != 25))
+
+	if (*user_input == NULL)
 	{
-		print_error(program, errno, STD_ERROR);
+		return (-1);
+	}
+
+	len = strlen(*user_input);
+	if (len >= 1 && (*user_input)[len - 1] == '\n')
+	{
+		(*user_input)[len - 1] = '\0';
+	}
+	else
+	{
 		cleanupInput(user_input, n);
-		exit(EXIT_FAIL);
+		return (-1);
 	}
-	if (nb_bytes == -1 && (errno == 0 || errno == 25))
-	{
-		cleanupInput(user_input, n);
-		exit(EXIT_DONE);
-	}
-	/*this condition is logical*/
-	/* read not ok cause minimum one character + \n*/
-	if (nb_bytes  <= 1)
+
+	if (len <= 1)
 	{
 		cleanupInput(user_input, n);
 		return (0);
-	}
-	/* delete new line character */
-	if ((*user_input)[nb_bytes - 1] == '\n')
-	{
-		(*user_input)[nb_bytes - 1] = '\0';
 	}
 	return (1);
 }
