@@ -56,7 +56,18 @@ int alias_exist(char *var_name, char *var_value, LinkedList **alia_l)
 	char *old_data = NULL;
 	char *dest = NULL;
 
+	int len = 0;
+
 	tmp = *alia_l;
+
+	len = _strlen(var_value);
+	if (len != 0)
+	{
+		if (len < 3)
+			return (1);
+		if (var_value[0] != 39 || var_value[len - 1] != 39)
+			return (1);
+	}
 	while (tmp != NULL)
 	{
 		var_ok = get_beginsWith(tmp->arg, var_name);
@@ -106,6 +117,10 @@ void alias_action(char *prg, int id_sep, char *alias_data, LinkedList **alia_l)
 	}
 	else
 	{
+		if (*(alias_data + id_sep + 1) != 39)
+		{
+			return;
+		}
 		value = alias_data + id_sep + 1;
 		name = (char *) malloc(id_sep + 1);
 		_strncpy(name, alias_data, (id_sep));
