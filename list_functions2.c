@@ -2,7 +2,6 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include "list.h"
-#include <stdio.h>
 #include "common.h"
 #include "helper_functions.h"
 #include "strings.h"
@@ -41,41 +40,4 @@ void conv_env_to_list(LinkedList **list_env, char **env)
 		add_node_end(list_env, env[i]);
 		i++;
 	}
-}
-
-/**
-* print_list - print the nodes of list
-* @program: initila shell program
-* @h: pointer to first elment in list (HEAD)
-* Return: number of elmements in list
-*/
-void print_list(char *program, LinkedList *h)
-{
-	while (h != NULL)
-	{
-		if (h->arg != NULL)
-			printMsgWithNewLine(program, h->arg);
-		h = h->next;
-	} /*while loop*/
-}
-/**
-* get_node_by_prefix - search if info begins with prefix in list
-* @prefix: pattern that h->arg begins
-* @h: linkedlist contains data
-* Return: pointer to h->arg if lookup is ok
-*/
-char *get_node_by_prefix(char *prefix, LinkedList *h)
-{
-	char *value = NULL;
-
-	while (h != NULL)
-	{
-		if (get_beginsWith(h->arg, prefix) && _strlen(prefix) == h->idx_sep)
-		{
-			value = (h->arg);
-			break;
-		}
-		h = h->next;
-	}
-	return (value);
 }

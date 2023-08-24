@@ -2,70 +2,8 @@
 #include "errors.h"
 #include "list.h"
 #include <string.h>
-#include "strings.h"
-#include <stdio.h>
 #include "common.h"
 /**************** methode to write a message with new line */
-
-/**
-* printMsgWithNewLine - print msg with jump to new line
-* @program: the initial program that lunch shell
-* @msg: message to print in stdout
-* Return: void
-*/
-void printMsgWithNewLine(char *program, char *msg)
-{
-	int len_msg = 0, size = 0;
-	char *new_line = "\n";
-	char *dest = NULL;
-	int fd = 1; /*stdout*/
-
-
-	len_msg = _strlen(msg);
-	size = len_msg + _strlen(new_line) + 1;
-	dest = malloc(size);
-	if (dest != NULL)
-	{
-		if (msg != NULL)
-		{
-			_strcpy(dest, msg);
-			_strcat(dest, new_line);
-			write(fd, dest, _strlen(dest));
-			free(dest);
-			dest = NULL;
-		}
-		else
-		{
-			free(dest);
-			dest = NULL;
-		}
-	}
-	else
-	{
-		print_error(program, MALLOC_ERROR, NEW_ERROR);
-	}
-}
-/**
-* print_error_alias - print error message if alias not found
-* @program: initial shell program
-* @input_data: name of alias that cause problem
-* Return: void
-*/
-void print_error_alias(char *program, char *input_data)
-{
-	char *def_msg = ": not found";
-	int  size = 0;
-	char *dest = NULL;
-
-	size =  _strlen(input_data) + _strlen(def_msg) +  1;
-	dest = malloc(size);
-	_strcpy(dest, input_data);
-	_strcat(dest, def_msg);
-	print_err_plus(program, ALIAS_NOT_FOUND, NEW_ERROR, dest);
-	free(dest);
-	dest = NULL;
-}
-
 /**
 * save_commands - save multiple commands in linkedlist
 * @cmds: list that contains commands
@@ -115,3 +53,78 @@ int save_commands(LinkedList **cmds, char *input)
 
 	return (i);
 }
+
+/**
+* printMsg - print node in list alias
+* @alia: list contains alias
+* Return: void
+*/
+void printMsg(LinkedList *alia)
+{
+	int len_msg = 0, pos_sep = 0;
+	int fd = 1; /*stdout*/
+
+	len_msg = _strlen(alia->arg);
+	pos_sep = alia->idx_sep;
+	if (len_msg > 0)
+	{
+		write(fd, alia->arg, pos_sep);
+		write(fd, "='", 2);
+		write(fd, (alia->arg + pos_sep + 1), (len_msg - pos_sep - 1));
+		write(fd, "'\n", 2);
+	}
+
+}
+
+/**
+* nodeBeginsWithVar - test if item list begins with prefix
+* @prefix: name of alias
+* @h: list of alias
+* Return: item of alias
+*/
+char *nodeBeginsWithVar(char *prefix, LinkedList *h)
+{
+	char *value = NULL;
+	LinkedList *temp = NULL;
+
+	while (h != NULL)
+	{
+		if (get_beginsWith(h->arg, prefix) && _strlen(prefix) == h->idx_sep)
+		{
+			value = (h->arg);
+			temp = h;
+			temp->next = NULL;
+			printMsg(temp);
+			break;
+		}
+		h = h->next;
+	}
+	return (value);
+}
+
+/**
+* print_alia_reverse - print nodes of list alia in reverse order
+* @h: list alias
+* Return: void
+*/
+void print_alia_reverse(LinkedList *h)
+{
+	LinkedList *new_head = NULL;
+	LinkedList *current  = h;
+	LinkedList *temp;
+
+	while (current != NULL)
+	{
+		temp = current->next;
+		current->next = new_head;
+		new_head = current;
+		current = temp;
+	}
+
+	while (new_head != NULL)
+	{
+		printMsg(new_head);
+		new_head = new_head->next;
+	}
+}
+

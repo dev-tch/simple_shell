@@ -2,7 +2,6 @@
 #include <errno.h>
 #include "strings.h"
 #include <string.h>
-#include <stdio.h>
 #include "cleanup.h"
 
 /*clear_eof deleted  - test 11*/

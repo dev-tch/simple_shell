@@ -1,7 +1,6 @@
 #include "strings.h"
 #include "new_types.h"
 #include "errors.h"
-#include <stdio.h>
 #include "cleanup.h"
 #include <stdlib.h>
 #include <unistd.h>

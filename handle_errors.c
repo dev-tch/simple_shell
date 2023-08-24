@@ -3,7 +3,7 @@
 #include  <stdio.h>  /*required to include the function perror*/
 #include  <errno.h>  /*reuired toinclude globalvariable errno*/
 #include "errors.h"
-#include <stdio.h>
+
 /**
 * get_error_value - return the value error
 * @code: the error code

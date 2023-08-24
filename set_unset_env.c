@@ -5,7 +5,7 @@
 #include "list.h"
 #include "errors.h"
 #include "common.h"
-#include <stdio.h>
+
 /**
 * var_exist - check is variable found in environnement
 * @var_name: the name of variable

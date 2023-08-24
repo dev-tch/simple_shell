@@ -81,7 +81,7 @@ int main(int argc, char *argv[], char **env)
 		}
 		/*function to save multiple commands seperated with symbol (;)*/
 		ret = save_commands(&cmds, user_input);
-
+		if (cmds != NULL)
 		temp = cmds;
 		/*execute every command in list cmds*/
 		i = 0;
@@ -91,6 +91,7 @@ int main(int argc, char *argv[], char **env)
 			if (i > 0 && head != NULL)
 			{
 				new_env = list_to_array(list_env);
+				proc_alias(&head, alia_l);
 				handle_path(program, new_env, head->arg, &head);
 				args = list_to_array(head);
 				len_args = list_len(head);

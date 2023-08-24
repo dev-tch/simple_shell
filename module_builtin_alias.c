@@ -4,7 +4,7 @@
 #include "list.h"
 #include "stdlib.h"
 #include "helper_functions.h"
-#include <stdio.h>
+
 void alias_action(char *prg, int id_sep, char *alias_var, LinkedList **alia_l);
 
 /**
@@ -25,10 +25,9 @@ LinkedList **alia_l)
 	/*unused parameters*/
 	env     = (env == NULL) ? NULL : env;
 	env_l   = (env == NULL) ? NULL : env_l;
-
 	if (la == 1)
 	{
-		print_list(prg, *alia_l);
+		print_alia_reverse(*alia_l);
 	}
 	else
 	{
@@ -56,18 +55,8 @@ int alias_exist(char *var_name, char *var_value, LinkedList **alia_l)
 	char *old_data = NULL;
 	char *dest = NULL;
 
-	int len = 0;
-
 	tmp = *alia_l;
 
-	len = _strlen(var_value);
-	if (len != 0)
-	{
-		if (len < 3)
-			return (1);
-		if (var_value[0] != 39 || var_value[len - 1] != 39)
-			return (1);
-	}
 	while (tmp != NULL)
 	{
 		var_ok = get_beginsWith(tmp->arg, var_name);
@@ -106,21 +95,13 @@ void alias_action(char *prg, int id_sep, char *alias_data, LinkedList **alia_l)
 
 	char *value = NULL;
 	char *name  = NULL;
-
+	(void) prg;
 	if (id_sep == 0)
 	{
-		value = get_node_by_prefix(alias_data, *alia_l);
-		if (value != NULL)
-			printMsgWithNewLine(prg, value);
-		/*else*/
-		/*print_error_alias(prg, alias_data);*/ /*test not printing error*/
+		value = nodeBeginsWithVar(alias_data, *alia_l);
 	}
 	else
 	{
-		if (*(alias_data + id_sep + 1) != 39)
-		{
-			return;
-		}
 		value = alias_data + id_sep + 1;
 		name = (char *) malloc(id_sep + 1);
 		_strncpy(name, alias_data, (id_sep));
@@ -128,7 +109,7 @@ void alias_action(char *prg, int id_sep, char *alias_data, LinkedList **alia_l)
 		free(name);
 		if (var_alia_found == 0)
 		{
-			add_node_end(alia_l, alias_data);
+			add_node_first(alia_l, alias_data);
 		}
 	}
 }

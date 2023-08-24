@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/wait.h>
-#include <stdio.h>
+
 /**
 * lunch_shell_execution - handle process child and parrent
 * @prg: a name of program shell

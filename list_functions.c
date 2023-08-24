@@ -1,7 +1,7 @@
 #include "new_types.h"
 #include "strings.h"
 #include "main_shell.h"
-#include <stdio.h>
+
 /**
 * add_node_end - add node at the list
 * @head: pointer of pointers contains the pointer to each node

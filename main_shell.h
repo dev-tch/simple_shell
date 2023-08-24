@@ -26,5 +26,6 @@ int get_beginsWith(char *src, char *pattern);
 char *get_path_value(char **env);
 int convert_path_to_list(char *prg, char **env,  LinkedList **head_path);
 char *lookup_in_path(char *name_cmd, LinkedList *head_path);
+void proc_alias(LinkedList **h, LinkedList *al);
 #endif
 

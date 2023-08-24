@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "strings.h"
 #include <stdlib.h>
 #include "new_types.h"
