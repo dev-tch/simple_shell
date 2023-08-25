@@ -12,8 +12,8 @@
 char *get_error_value(unsigned int  code)
 {
 unsigned int i = 0;
-
 static char *err[21];
+
 /*define errors*/
 err[0]  = ": SUCCESS";
 err[1]  = ": Operation not permitted";
@@ -36,10 +36,10 @@ err[17] = ": ILLigal number of arguments";
 err[18] = ": Environnement variable Not found";
 err[19] = ": alias";
 err[20] = ": Unknown Error";
+
 for (i = 0 ; i < 21 ; i++)
 {
-if (i == code)
-return (err[i]);
+	return (err[i]);
 }
 return (": Unknown Error");
 }
@@ -140,5 +140,34 @@ void print_err_plus(char *program, int err_code, int type_error, char *cmd_arg)
 			free(dest);
 			dest = NULL;
 		}
+	}
+}
+/**
+* print_err_127 - new error - command not in path
+* @program: initial shell program
+* @arg: name of comand
+* Return: void
+*/
+void print_err_127(char *program, char *arg)
+{
+	char *sep = ": 1: ";
+	char *end = ": not found\n";
+	char *dest      = NULL;
+	int size        = 0;
+	int fd = 2; /*file descriptor for stderr*/
+
+	size = _strlen(program)  + _strlen(sep) + _strlen(arg) + _strlen(end);
+	dest = (char *) malloc(size + 1);
+
+	if (dest != NULL)
+	{
+		/*_strcat(dest, program);*/
+		_strcpy(dest, program);
+		_strcat(dest, sep);
+		_strcat(dest, arg);
+		_strcat(dest, end);
+		write(fd, dest, (size));
+		free(dest);
+		dest = NULL;
 	}
 }

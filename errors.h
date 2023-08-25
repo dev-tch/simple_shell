@@ -20,4 +20,5 @@
 char *get_error_value(unsigned int  err_code);
 void print_error(char *program, int err_code, int type_error);
 void print_err_plus(char *prog, int err_code, int type_error, char *cmd_arg);
+void print_err_127(char *program, char *arg);
 #endif

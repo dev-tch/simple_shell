@@ -9,7 +9,7 @@ int  read_command(char *program, char  **user_input, size_t *n);
 int  add_args_cmd_to_list(char *program, char *user_input, LinkedList **head,
 int status_code);
 int  handle_errors(char *program, char *command);
-void handle_path(char *program, char **env, char *name_cmd, LinkedList **head);
+int handle_path(char *program, char **env, char *name_cmd, LinkedList **head);
 /**
  * main - entry point
  * @argc: number of arguments
@@ -33,7 +33,7 @@ int main(int argc, char *argv[], char **env)
 	char **new_env = NULL;
 	LinkedList *alia_l = NULL;
 	LinkedList *cmds   = NULL;
-	int ret = 0;
+	int ret = 0, path_ok = 1, no_err = 1;
 	LinkedList *temp = NULL;
 	int status_code = 0;
 
@@ -92,7 +92,7 @@ int main(int argc, char *argv[], char **env)
 			{
 				new_env = list_to_array(list_env);
 				proc_alias(&head, alia_l);
-				handle_path(program, new_env, head->arg, &head);
+				path_ok = handle_path(program, new_env, head->arg, &head);
 				args = list_to_array(head);
 				len_args = list_len(head);
 				if (_strcmp(args[0], "exit") == 0)
@@ -107,7 +107,9 @@ int main(int argc, char *argv[], char **env)
 					&alia_l);
 				if (loop  == NOT_BUILT_IN)
 				{
-					if (handle_errors(program, args[0]) == 1)
+					if (path_ok)
+						no_err = handle_errors(program, args[0]);
+					if (path_ok && no_err)
 					{
 						/*lunch the excution of command with process child*/
 						loop = lunch_shell_execution(program, len_args, args, new_env,
@@ -277,7 +279,7 @@ int handle_errors(char *program, char *command)
 * @head: list contains command name and its arguments
 * Return: void
 */
-void  handle_path(char *program, char **env, char *name_cmd, LinkedList **head)
+int  handle_path(char *program, char **env, char *name_cmd, LinkedList **head)
 {
 	int builtin    = 0;
 	int test_path  = 0;
@@ -287,21 +289,26 @@ void  handle_path(char *program, char **env, char *name_cmd, LinkedList **head)
 
 	/*test if command is prefixed with directory symbol*/
 	if (*name_cmd == '/' || *name_cmd == '.' || *name_cmd == '~')
-	return;
+	return (1);
 	/*test if command is builtin function*/
 	builtin = is_builtin(name_cmd);
 	if (builtin)
-		return;
+		return (1);
 
 	test_path = convert_path_to_list(program, env, &head_path);
 	if (test_path)
 	{
 		var_path = lookup_in_path(name_cmd, head_path);
+		if (var_path == NULL)
+		{
+			print_err_127(program, name_cmd);
+			return (0);
+		}
 		if (var_path != NULL)
 		{
 			ret_del =  delete_first_node(head);
 			if (ret_del == -1)
-				return;
+				return (0);
 			add_node_first(head, var_path);
 			if (head_path != NULL)
 				/*free_list(head_path);*/
@@ -311,5 +318,6 @@ void  handle_path(char *program, char **env, char *name_cmd, LinkedList **head)
 		}
 		cleanupList(&head_path);
 	}
+	return (1);
 }
 
