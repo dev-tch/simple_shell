@@ -33,7 +33,7 @@ int main(int argc, char *argv[], char **env)
 	char **new_env = NULL;
 	LinkedList *alia_l = NULL;
 	LinkedList *cmds   = NULL;
-	int ret = 0, no_err = 1; /*path_ok = 1*/
+	int ret = 0, no_err = 0, path_ok = 0;
 	LinkedList *temp = NULL;
 	int status_code = 0;
 
@@ -54,12 +54,14 @@ int main(int argc, char *argv[], char **env)
 		{
 			if (isatty(STDIN_FILENO))
 			{
+				/*errno = 0;*/
 				display_prompt("\n", 1);
 			}
 			break;
 		}
 		if (isatty(STDIN_FILENO))
 		{
+			errno = 0;
 			if (!display_prompt("$ ", 2)) /*test 10*/
 			{
 				cleanupInput(&user_input, &n);
@@ -93,7 +95,7 @@ int main(int argc, char *argv[], char **env)
 				new_env = list_to_array(list_env);
 				proc_alias(&head, alia_l);
 				/*path_ok */
-				handle_path(program, new_env, head->arg, &head);
+				path_ok = handle_path(program, new_env, head->arg, &head);
 				args = list_to_array(head);
 				len_args = list_len(head);
 				if (_strcmp(args[0], "exit") == 0)
@@ -109,8 +111,11 @@ int main(int argc, char *argv[], char **env)
 				if (loop  == NOT_BUILT_IN)
 				{
 					/*if (path_ok)*/ /*possible impact*/
-					no_err = handle_errors(program, args[0]);
-					if (no_err)
+					if (path_ok)
+					{
+						no_err = handle_errors(program, args[0]);
+					}
+					if (no_err && path_ok)
 					{
 						/*lunch the excution of command with process child*/
 						loop = lunch_shell_execution(program, len_args, args, new_env,
@@ -129,6 +134,8 @@ int main(int argc, char *argv[], char **env)
 			temp = temp->next;
 			ret--;
 			i = 0;
+			no_err  = 0;
+			path_ok = 0;
 		}
 
 		/*after finish the excution of list command */
@@ -302,8 +309,8 @@ int  handle_path(char *program, char **env, char *name_cmd, LinkedList **head)
 		var_path = lookup_in_path(name_cmd, head_path);
 		if (var_path == NULL && !is_empty(name_cmd))
 		{
-			/*print_err_127(program, name_cmd);*/ /*possible impact*/
-			return (0);
+			print_err_127(program, name_cmd);
+				return (0);
 		}
 		if (var_path != NULL)
 		{
