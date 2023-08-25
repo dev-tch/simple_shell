@@ -39,7 +39,8 @@ err[20] = ": Unknown Error";
 
 for (i = 0 ; i < 21 ; i++)
 {
-	return (err[i]);
+	if (i == code)
+		return (err[i]);
 }
 return (": Unknown Error");
 }
