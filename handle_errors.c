@@ -157,6 +157,9 @@ void print_err_127(char *program, char *arg)
 	int size        = 0;
 	int fd = 2; /*file descriptor for stderr*/
 
+	/*errno*/
+	errno = 127;
+
 	size = _strlen(program)  + _strlen(sep) + _strlen(arg) + _strlen(end);
 	dest = (char *) malloc(size + 1);
 
