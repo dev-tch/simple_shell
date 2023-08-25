@@ -36,6 +36,7 @@ int main(int argc, char *argv[], char **env)
 	int ret = 0, no_err = 1, path_ok = 1;
 	LinkedList *temp = NULL;
 	int status_code = 0;
+	int old_errno = 0;
 
 	if (argc >= 0)
 	{
@@ -50,6 +51,10 @@ int main(int argc, char *argv[], char **env)
 	conv_env_to_list(&list_env, env);
 	while (loop)
 	{
+		if (errno != 25)
+		{
+			old_errno = errno;
+		}
 		if (read_ok == -1 || read_ok == -2)
 		{
 			if (isatty(STDIN_FILENO))
@@ -153,6 +158,8 @@ int main(int argc, char *argv[], char **env)
 	cleanupList(&head);
 	cleanupList(&list_env);
 	cleanupList(&alia_l);
+	if (old_errno != 0)
+	exit(old_errno);
 	return (0);
 }
 /**
