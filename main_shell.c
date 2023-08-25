@@ -113,6 +113,10 @@ int main(int argc, char *argv[], char **env)
 					/*if (path_ok)*/ /*possible impact*/
 					if (!path_ok)
 					{
+						print_err_127(program, args[0]);
+					}
+					else
+					{
 						no_err = handle_errors(program, args[0]);
 					}
 					if (no_err && path_ok)
@@ -309,8 +313,7 @@ int  handle_path(char *program, char **env, char *name_cmd, LinkedList **head)
 		var_path = lookup_in_path(name_cmd, head_path);
 		if (var_path == NULL && !is_empty(name_cmd))
 		{
-			print_err_127(program, name_cmd);
-				return (0);
+			return (0);
 		}
 		if (var_path != NULL)
 		{
