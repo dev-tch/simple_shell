@@ -74,7 +74,6 @@ int main(int argc, char *argv[], char **env)
 				exit(EXIT_FAIL);
 			}
 		}
-
 		cleanupInput(&user_input, &n);
 		read_ok = read_command(program, &user_input, &n);
 		if (!read_ok)
@@ -329,6 +328,9 @@ int  handle_path(char *program, char **env, char *name_cmd, LinkedList **head)
 		}
 		cleanupList(&head_path);
 	}
+	else
+		return (0);
+
 	return (1);
 }
 
