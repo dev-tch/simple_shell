@@ -3,6 +3,7 @@
 #include "list.h"
 #include <string.h>
 #include "common.h"
+
 /**************** methode to write a message with new line */
 /**
 * save_commands - save multiple commands in linkedlist
@@ -85,19 +86,17 @@ void printMsg(LinkedList *alia)
 char *nodeBeginsWithVar(char *prefix, LinkedList *h)
 {
 	char *value = NULL;
-	LinkedList *temp = NULL;
+	LinkedList *temp = h;
 
-	while (h != NULL)
+	while (temp != NULL)
 	{
-		if (get_beginsWith(h->arg, prefix) && _strlen(prefix) == h->idx_sep)
+		if (get_beginsWith(temp->arg, prefix) && _strlen(prefix) == temp->idx_sep)
 		{
-			value = (h->arg);
-			temp = h;
-			temp->next = NULL;
+			value = (temp->arg);
 			printMsg(temp);
 			break;
 		}
-		h = h->next;
+		temp =  temp->next;
 	}
 	return (value);
 }
@@ -109,22 +108,11 @@ char *nodeBeginsWithVar(char *prefix, LinkedList *h)
 */
 void print_alia_reverse(LinkedList *h)
 {
-	LinkedList *new_head = NULL;
-	LinkedList *current  = h;
-	LinkedList *temp;
-
-	while (current != NULL)
+	if (h == NULL)
 	{
-		temp = current->next;
-		current->next = new_head;
-		new_head = current;
-		current = temp;
+		return;
 	}
-
-	while (new_head != NULL)
-	{
-		printMsg(new_head);
-		new_head = new_head->next;
-	}
+	print_alia_reverse(h->next);
+	printMsg(h);
 }
 
