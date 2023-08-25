@@ -104,7 +104,6 @@ int main(int argc, char *argv[], char **env)
 				len_args = list_len(head);
 				if (_strcmp(args[0], "exit") == 0)
 				{
-					errno = old_errno;
 					cleanupInput(&user_input, &n);
 					cleanupList(&head);
 					cleanupList(&cmds); /*fix valgrind memory leaks */
@@ -129,8 +128,6 @@ int main(int argc, char *argv[], char **env)
 						/*lunch the excution of command with process child*/
 						loop = lunch_shell_execution(program, len_args, args, new_env,
 						&status_code);
-						errno = (status_code == 2) ? 2 : errno;
-						old_errno = errno;
 
 					}
 				}
