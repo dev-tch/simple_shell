@@ -28,7 +28,7 @@ LinkedList **alia_l)
 		cleanupList(alia_l);
 		cleanupArray(list_len(*env_l), &env);
 		cleanupList(env_l);
-		exit(EXIT_DONE);
+		exit(errno);
 	}
 	else if (la >= 2)
 	{
