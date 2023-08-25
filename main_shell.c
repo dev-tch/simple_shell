@@ -33,7 +33,7 @@ int main(int argc, char *argv[], char **env)
 	char **new_env = NULL;
 	LinkedList *alia_l = NULL;
 	LinkedList *cmds   = NULL;
-	int ret = 0, no_err = 0, path_ok = 0;
+	int ret = 0, no_err = 1, path_ok = 1;
 	LinkedList *temp = NULL;
 	int status_code = 0;
 
@@ -111,7 +111,7 @@ int main(int argc, char *argv[], char **env)
 				if (loop  == NOT_BUILT_IN)
 				{
 					/*if (path_ok)*/ /*possible impact*/
-					if (path_ok)
+					if (!path_ok)
 					{
 						no_err = handle_errors(program, args[0]);
 					}
@@ -134,8 +134,8 @@ int main(int argc, char *argv[], char **env)
 			temp = temp->next;
 			ret--;
 			i = 0;
-			no_err  = 0;
-			path_ok = 0;
+			path_ok = 1;
+			no_err  = 1;
 		}
 
 		/*after finish the excution of list command */
