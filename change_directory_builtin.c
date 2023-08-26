@@ -20,11 +20,11 @@ int update_value(char *var_name, char *var_value, LinkedList **env_l);
 int change_dir(char *prg, int la, char **args, char **env,
 LinkedList **env_l, LinkedList **alia_l)
 {
-	char *home, *pwd, *oldpwd;
+	char *home = NULL, *pwd = NULL, *oldpwd = NULL;
 	char dest[256];
 
 	/*char cwd[256];*/
-	int ret = 0;
+	int ret = 1;
 	/*char *new_dir;*/
 	/*char old_dir[256];*/
 	/*unused parameters*/
@@ -37,17 +37,17 @@ LinkedList **env_l, LinkedList **alia_l)
 	/*la > 1*/
 	home = get_value("HOME", env_l);
 	pwd  = get_value("PWD", env_l);
-	oldpwd = get_value("OLDPWD", env_l);
-	if (la == 1)
+	if (la == 1 && home != NULL)
 		_strcpy(dest, home);
 	else if (la > 1)
 	{
-		if (_strcmp(args[1], "-") == 0)
+		if (_strcmp(args[1], "-") == 0 && oldpwd != NULL)
 			_strcpy(dest, oldpwd);
-		else
-		 _strcpy(dest, args[1]);
+		else if (args[1] != NULL)
+			_strcpy(dest, args[1]);
 	}
-	ret = chdir(dest);
+	if (dest != NULL && !is_empty(dest))
+		ret = chdir(dest);
 	if (ret == 0) /*on success*/
 	{
 		/*update_value("*/
