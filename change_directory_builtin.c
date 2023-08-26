@@ -3,7 +3,7 @@
 #include "new_types.h"
 #include "common.h"
 #include "strings.h"
-
+#include <stdio.h>
 char *get_value(char *var_name, LinkedList **env_t);
 int update_value(char *var_name, char *var_value, LinkedList **env_l);
 
@@ -20,40 +20,42 @@ int update_value(char *var_name, char *var_value, LinkedList **env_l);
 int change_dir(char *prg, int la, char **args, char **env,
 LinkedList **env_l, LinkedList **alia_l)
 {
-	char *home = NULL, *pwd = NULL, *oldpwd = NULL;
+	char *home = get_value("HOME", env_l), *pwd = get_value("PWD", env_l);
+	char *oldpwd = get_value("OLDPWD", env_l);
 	char dest[256];
-
-	/*char cwd[256];*/
-	int ret = 1;
-	/*char *new_dir;*/
-	/*char old_dir[256];*/
-	/*unused parameters*/
+	int ret = 1, flag = 0;
 	(void)prg;
 	(void) env;
 	(void)alia_l;
-	/*recuperation de PWD*/
-	/*recuperation de HOME*/
-	/*la ==1*/
-	/*la > 1*/
-	home = get_value("HOME", env_l);
-	pwd  = get_value("PWD", env_l);
 	if (la == 1 && home != NULL)
 		_strcpy(dest, home);
 	else if (la > 1)
 	{
-		if (_strcmp(args[1], "-") == 0 && oldpwd != NULL)
+		if (_strcmp(args[1], "-") == 0)
+		{
+			oldpwd = (oldpwd != NULL) ? oldpwd : pwd;
+			if (oldpwd != NULL)
 			_strcpy(dest, oldpwd);
+			flag = 1;
+		}
 		else if (args[1] != NULL)
 			_strcpy(dest, args[1]);
 	}
 	if (dest != NULL && !is_empty(dest))
+	{
 		ret = chdir(dest);
+		if (flag)
+		{
+			write(STDOUT_FILENO, dest, _strlen(dest));
+			write(STDOUT_FILENO, "\n", 1);
+		}
+	}
 	if (ret == 0) /*on success*/
 	{
-		/*update_value("*/
-		update_value("OLDPWD", pwd, env_l);
+		if (dest != NULL)
 		update_value("PWD", dest, env_l);
-		/*update pwd*/
+		if (oldpwd != NULL)
+			update_value("OLDPWD", oldpwd, env_l);
 	}
 	return (1);
 }
