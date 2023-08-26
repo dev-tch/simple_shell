@@ -4,9 +4,11 @@
 #include "common.h"
 #include "strings.h"
 #include <stdio.h>
+#include <dirent.h>
+#include "errors.h"
 char *get_value(char *var_name, LinkedList **env_t);
 int update_value(char *var_name, char *var_value, LinkedList **env_l);
-
+int test_exist_dir(char *prg, char *path);
 /**
  * Change_dir - change the current directory.
  * @prg: The program name. example ./shell
@@ -24,7 +26,6 @@ LinkedList **env_l, LinkedList **alia_l)
 	char *oldpwd = get_value("OLDPWD", env_l);
 	char dest[256];
 	int ret = 1, flag = 0;
-	(void)prg;
 	(void) env;
 	(void)alia_l;
 	if (la == 1 && home != NULL)
@@ -43,6 +44,8 @@ LinkedList **env_l, LinkedList **alia_l)
 	}
 	if (dest != NULL && !is_empty(dest))
 	{
+		if (!test_exist_dir(prg, dest))
+			return (1);
 		ret = chdir(dest);
 		if (flag)
 		{
@@ -123,4 +126,32 @@ int update_value(char *var_name, char *var_value, LinkedList **env_l)
 		tmp = tmp->next;
 	}
 	return (0);
+}
+
+/**
+* test_exist_dir - method to test existence of dir
+* @prg: initial shell program
+* @path: dir to test
+* Return: (0:ko)(1:ok)
+*/
+int test_exist_dir(char *prg, char *path)
+{
+	DIR *dir;
+	char *msg = ": 1: cd: can't cd to ";
+	int fderr = 2;
+	int res = 1;
+
+	dir = opendir(path);
+	errno = 0;
+	if (dir == NULL)
+	{
+		write(fderr, prg, _strlen(prg));
+		write(fderr, msg, _strlen(msg));
+		write(fderr, path, _strlen(path));
+		write(fderr, "\n", 1);
+		res = 0;
+	}
+	else
+		closedir(dir);
+	return (res);
 }
