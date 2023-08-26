@@ -22,10 +22,11 @@ int test_exist_dir(char *prg, char *path);
 int change_dir(char *prg, int la, char **args, char **env,
 LinkedList **env_l, LinkedList **alia_l)
 {
-char *home = get_value("HOME", env_l), *pwd = _strdup(get_value("PWD", env_l));
+char *home = get_value("HOME", env_l);
 	char *oldpwd = get_value("OLDPWD", env_l);
-	char dest[256];
+	char dest[256], pwd[256];
 	int ret = 1, flag = 0;
+_strcpy(pwd, get_value("PWD", env_l));
 	(void) env, (void)alia_l;
 	if (la == 1 && (home != NULL))
 		_strcpy(dest, home);
@@ -60,7 +61,6 @@ char *home = get_value("HOME", env_l), *pwd = _strdup(get_value("PWD", env_l));
 		if (pwd != NULL)
 			update_value("OLDPWD", pwd, env_l);
 	}
-	free(pwd);
 	return (1);
 }
 
