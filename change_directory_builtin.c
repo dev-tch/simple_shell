@@ -9,6 +9,7 @@
 char *get_value(char *var_name, LinkedList **env_t);
 int update_value(char *var_name, char *var_value, LinkedList **env_l);
 int test_exist_dir(char *prg, char *path);
+void update_env_var(char *dest, char *pwd, LinkedList **env_l);
 /**
  * Change_dir - change the current directory.
  * @prg: The program name. example ./shell
@@ -26,7 +27,9 @@ char *home = get_value("HOME", env_l);
 	char *oldpwd = get_value("OLDPWD", env_l);
 	char dest[256], pwd[256];
 	int ret = 1, flag = 0;
-_strcpy(pwd, get_value("PWD", env_l));
+
+	dest[0] = '\0';
+	_strcpy(pwd, get_value("PWD", env_l));
 	(void) env, (void)alia_l;
 	if (la == 1 && (home != NULL))
 		_strcpy(dest, home);
@@ -43,7 +46,7 @@ _strcpy(pwd, get_value("PWD", env_l));
 		else if (args[1] != NULL)
 			_strcpy(dest, args[1]);
 	}
-	if (dest != NULL && !is_empty(dest))
+	if (dest[0] != '\0')
 	{
 		if (!test_exist_dir(prg, dest))
 			return (1);
@@ -56,10 +59,7 @@ _strcpy(pwd, get_value("PWD", env_l));
 	}
 	if (ret == 0) /*on success*/
 	{
-		if (dest != NULL)
-			update_value("PWD", dest, env_l);
-		if (pwd != NULL)
-			update_value("OLDPWD", pwd, env_l);
+		update_env_var(dest, pwd, env_l);
 	}
 	return (1);
 }
@@ -155,4 +155,18 @@ int test_exist_dir(char *prg, char *path)
 	else
 		closedir(dir);
 	return (res);
+}
+/**
+* update_env_var - maj env variables
+* @dest: new PWD
+* @pwd: new OLDPWD
+* @env_l: list environnements
+* Return: void
+**/
+void update_env_var(char *dest, char *pwd, LinkedList **env_l)
+{
+	if (dest != NULL)
+		update_value("PWD", dest, env_l);
+	if (pwd != NULL)
+	update_value("OLDPWD", pwd, env_l);
 }
